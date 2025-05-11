@@ -61,7 +61,23 @@ alias ....='cd ../../..'  # Go up three directories
 
 # Override the uptime command
 uptime() {
-    print "It doesn't matter."
+    print "It doesn't matter! 🙂"
+}
+
+# Remove .DS_Store files
+rmds() {
+    echo "Removing .DS_Store files up to 2 levels deep"
+    find . -maxdepth 2 -type f -name '*.DS_Store' -print -execdir rm -f {} +
+}
+
+# Let me Google that for you
+lmgtfy() {
+    query=$1
+    if [ -z "$query" ]; then
+        read query
+    fi
+    echo "lEt ME goOgLE THAT fOr you…"
+    open -a "Arc" "$(ddgr --np -n 1 --json "$query" | jq '.[0] .url' -r)"
 }
 
 # Development tools
