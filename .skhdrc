@@ -1,0 +1,67 @@
+# fn - f1 : yabai -m space --switch 1
+# fn - f2 : yabai -m space --switch 2
+# fn - f3 : yabai -m space --switch 3
+# fn - f4 : yabai -m space --switch 4
+# fn - f5 : yabai -m space --switch 5
+# fn - f6 : yabai -m space --switch 6
+# fn - f7 : yabai -m space --switch 7
+# fn - f8 : yabai -m space --switch 8
+# fn - f9 : yabai -m space --switch 9
+# fn - f10 : yabai -m space --switch 10
+
+f14 : osascript '/Users/roelvangils/scripts/AppleScript/toggleFade.applescript'
+
+# ctrl + cmd - left: yabai -m window --space prev && yabai -m space --switch prev
+# ctrl + cmd - right: yabai -m window --space next && yabai -m space --switch next
+
+
+ctrl - 0x053: yabai -m space --switch 1
+ctrl - 0x12: yabai -m space --switch 1
+alt - 0x053: yabai -m window --space 1; yabai -m space --switch 1
+
+ctrl - 0x054: yabai -m space --switch 2
+ctrl - 0x13: yabai -m space --switch 2
+alt - 0x054: yabai -m window --space 2; yabai -m space --switch 2
+
+ctrl - 0x055: yabai -m space --switch 3
+ctrl - 0x14: yabai -m space --switch 3
+alt - 0x055: yabai -m window --space 3; yabai -m space --switch 3
+
+ctrl - 0x056: yabai -m space --switch 4
+ctrl - 0x15: yabai -m space --switch 4
+alt - 0x056: yabai -m window --space 4; yabai -m space --switch 4
+
+ctrl - 0x057: yabai -m space --switch 5
+ctrl - 0x17: yabai -m space --switch 5
+alt - 0x057: yabai -m window --space 5; yabai -m space --switch 5
+
+ctrl - 0x058: yabai -m space --switch 6
+ctrl - 0x16: yabai -m space --switch 6
+alt - 0x058: yabai -m window --space 6; yabai -m space --switch 6
+
+ctrl - 0x059: yabai -m space --switch 7
+ctrl - 0x18: yabai -m space --switch 7
+alt - 0x059: yabai -m window --space 7; yabai -m space --switch 7
+
+ctrl - 0x05B: yabai -m space --switch 8
+ctrl - 0x19: yabai -m space --switch 8
+alt - 0x05B: yabai -m window --space 8; yabai -m space --switch 8
+
+ctrl - 0x05C: yabai -m space --switch 9
+# ctrl - 0x20: yabai -m space --switch 9
+# alt - 0x05C: yabai -m window --space 9; yabai -m space --switch 9
+
+# Toggle between current and last space
+# ctrl - 0x052: yabai -m space --switch recent
+# ctrl - 0x0A: yabai -m space --switch recent
+
+# Loop through spaces
+ctrl - left: ~/Scripts/space.sh prev
+ctrl - right: ~/Scripts/space.sh next
+
+shift + alt - 0x0A: ~/Scripts/space.sh prev
+shift + alt - 0x12: ~/Scripts/space.sh next
+
+# Window History (a bit broken at the moment)
+# ctrl + shift - left: ~/Scripts/window-history prev
+# ctrl + shift - right: ~/Scripts/window-history next

@@ -1,0 +1,86 @@
+# Load Scription Addition
+sudo yabai --load-sa
+
+yabai -m space 1 --label "WEB" # Web
+yabai -m space 2 --label "WRK" # Work
+yabai -m space 3 --label "GTD" # Getting Things Done
+yabai -m space 4 --label "M&C" # Mail & Calendar
+yabai -m space 5 --label "SLK" # Slack
+yabai -m space 6 --label "COM" # COM Communication
+yabai -m space 7 --label "DEV" # Development
+yabai -m space 8 --label "M&M" # Music & Movies
+yabai -m space 9 --label "MON" # Monitoring
+
+# Rules
+yabai -m rule --add app="^Safari$" space=^1
+yabai -m rule --add label="manage_all" app=".*" sub-layer=normal
+
+# Fix for Arc
+yabai -m rule --add app="^Arc$" subrole='AXSystemDialog' manage=off mouse_follows_focus=off
+
+# yabai -m signal --add event=space_changed \
+#     action='echo "space_changed" | nc localhost 8000;'
+
+# yabai -m signal --add event=space_created \
+#     action='echo "space_created" | nc localhost 8000'
+
+# yabai -m signal --add event=space_destroyed \
+#     action='echo "space_destroyed" | nc localhost 8000'
+
+# yabai -m signal --add event=mission_control_enter \
+#     action='echo "$YABAI_MISSION_CONTROL_MODE" | nc localhost 8000'
+
+# yabai -m signal --add event=mission_control_exit \
+#     action='echo "mission_control_exit" | nc localhost 8000'
+
+# yabai -m signal --add event=application_launched \
+#     action='echo "application_launched: $YABAI_PROCESS_ID" | nc localhost 8000'
+
+# yabai -m signal --add event=window_created action='~/Scripts/move-to-space.sh $YABAI_WINDOW_ID &; echo "window_created: $YABAI_WINDOW_ID" & | nc localhost 8000 &'
+
+# global settings
+# yabai -m config mouse_follows_focus off
+# yabai -m config focus_follows_mouse off
+# yabai -m config window_origin_display default
+# yabai -m config window_placement second_child
+# yabai -m config window_shadow on
+# yabai -m config window_opacity off
+# yabai -m config split_ratio 0.50
+# yabai -m config auto_balance on
+# yabai -m config mouse_modifier fn
+# yabai -m config mouse_action1 move
+# yabai -m config mouse_action2 resize
+# yabai -m config mouse_drop_action swap
+# yabai -m config window_shadow off
+
+# general space settings
+yabai -m config layout float
+yabai -m config top_padding 0
+yabai -m config bottom_padding 0
+yabai -m config left_padding 0
+
+# NOTE: for OBS floating head
+# yabai -m config left_padding 450
+yabai -m config right_padding 0
+yabai -m config window_gap 0
+
+# Assign apps to spaces
+yabai -m rule --add app="^Safari$" space="1"
+yabai -m rule --add app="^Sunsama$" space="3"
+yabai -m rule --add app="^Sspotify$" space="8"
+
+# apps to not manage (ignore)
+# yabai -m rule --add app="^Raycast$" manage=off
+# yabai -m rule --add app="^System Settings$" manage=off
+# yabai -m rule --add app="^Settings$" manage=off
+# yabai -m rule --add app="^Preferences$" manage=off
+# yabai -m rule --add app="^Archive Utility$" manage=off
+# yabai -m rule --add app="^Pika$" manage=off
+# yabai -m rule --add app="^Creative Cloud$" manage=off
+# yabai -m rule --add app="^Music$" manage=off
+# yabai -m rule --add app="^Podcasts$" manage=off
+# yabai -m rule --add app="^ChatGPT$" manage=off
+# yabai -m rule --add app="^Calculator$" manage=off
+
+# Flash highlight to identify focused window
+# yabai -m signal --add label="flash_focus" event="window_focused" action="yabai -m query --windows --window | jq '.id' >> ~/window_focused.log"
