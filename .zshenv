@@ -29,6 +29,7 @@ export XDG_CACHE_HOME="$HOME/.cache"
 # ============================================================
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_BUNDLE_FILE="$HOME/repos/dotfiles/Brewfile"
 
 # ============================================================
 #  TOOL SETTINGS
