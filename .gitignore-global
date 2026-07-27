@@ -1,0 +1,28 @@
+# Global ignore rules, applied to every repository.
+# Referenced by core.excludesfile in .gitconfig.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.direnv/
+
+# Backups
+*.bak
+*.bak-*
+*.orig
+
+# Misc
+*.firm.graph

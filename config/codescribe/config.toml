@@ -1,0 +1,28 @@
+# codescribe global config — machine-wide defaults.
+# A project.json overrides anything set here. API keys do NOT go here — set them in your
+# environment: CODESCRIBE_KEY (Gemini) and ELEVENLABS_API_KEY (ElevenLabs), e.g. in ~/.secrets.
+
+[engine_settings]
+# Run the preflight automatically before every run (override per-run with --skip-preflight).
+preflight = true
+
+[engine_settings.advanced]
+# TTS provider: "gemini" or "elevenlabs"
+tts_provider = "elevenlabs"
+
+# Default narrator voice: a Gemini prebuilt voice (e.g. "Despina") or an ElevenLabs voice name/id.
+voice_name = "VmfDq5bH5rzYRsJtrQ7l"   # Lara (nl audiobook narrator); run `codescribe voices` to list
+
+# Models
+pro_model = "gemini-3.1-pro-preview"          # Gemini text model (S1/S2/S4 + judge)
+tts_model = "gemini-3.1-flash-tts-preview"    # Gemini TTS — only when tts_provider = gemini
+el_model  = "eleven_v3"                        # ElevenLabs model — only when tts_provider = elevenlabs
+
+# Cost-estimate list prices in USD (converted to `currency` at the live exchange rate for display).
+[engine_settings.advanced.pricing]
+currency              = "EUR"   # "EUR" or "USD"
+gemini_input_per_1m   = 2.00
+gemini_output_per_1m  = 12.00
+tts_input_per_1m      = 1.00
+tts_output_per_1m     = 20.00
+elevenlabs_per_1k_chars = 0.18

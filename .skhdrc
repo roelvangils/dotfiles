@@ -1,0 +1,314 @@
+# ~/.skhdrc — skhd v0.3.9 + yabai v7.1.25
+# Reload with: skhd --restart-service
+#
+# Full paths are used deliberately: skhd runs under launchd, which does not
+# inherit your shell PATH, so a bare `yabai` may not resolve.
+#
+# LAYOUT OF THIS FILE
+#   ctrl + <key>   -> spaces (always live, no mode)
+#   tap caps_lock  -> enters "window mode", where bare letters act on windows
+#   ctrl + cmd     -> send the focused window to a space AND follow it
+#   ctrl + alt     -> send the focused window to a space and STAY
+#   nothing on plain alt, because alt is reserved for app toggling
+#
+# ctrl+alt is shared with Karabiner's buttonless-drag chord, deliberately —
+# see the note above those bindings for what that costs.
+
+# ══════════════════════════════════════════════════════════════════════════
+#  MODES
+# ══════════════════════════════════════════════════════════════════════════
+# Syntax: :: <name> [@] [: <command run on entering>]
+# The `@` makes the mode CAPTURE keypresses — anything not bound below is
+# swallowed rather than passed to the app. That is what makes bare `h` safe
+# to bind, and also why the on-screen indicator matters: without it you can
+# be sitting in a mode that eats your typing.
+#
+# The indicator is a cheat sheet drawn bottom-right by Hammerspoon (hs.ipc is
+# loaded in init.lua; yabaiHudShow/Hide are defined at the end of init.lua).
+# Bottom-right rather than centred so it never covers the windows you are
+# about to move. If Hammerspoon isn't running these fail silently and the mode
+# still works — you just lose the cheat sheet.
+#
+# THE CHEAT SHEET IS GENERATED FROM THIS FILE — nothing to keep in sync.
+# init.lua re-parses it on every show, so edits appear immediately. Two
+# markers drive it, both ordinary skhd comments so they change no behaviour:
+#
+#   #== <title>   starts a section on the sheet
+#   #= <label>    the description shown for that binding
+#
+# A binding with no `#=` is simply left off the sheet. Rows whose command ends
+# in `skhd -k escape` are detected automatically and marked as leaving the
+# mode — that isn't annotated by hand either.
+:: default : /opt/homebrew/bin/hs -c 'yabaiHudHide()' > /dev/null 2>&1
+:: window @ : /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1
+
+# ── enter / leave ─────────────────────────────────────────────────────────
+# PRIMARY: a quick TAP on caps_lock. Karabiner's `to_if_alone` on that key
+# emits f19 when caps_lock is pressed and released within 250ms with nothing
+# in between; holding it is still plain Hyper, untouched and with no added
+# latency (the `to` fires on key-down, `to_if_alone` only on key-up).
+#
+# f19 by keycode because skhd has no function-key literals — kVK_F19 = 0x50.
+# No Mac keyboard has an F19 key, so nothing else can ever send this.
+#
+# `fn -` IS REQUIRED and is the whole reason a bare `0x50` silently does
+# nothing. macOS tags every function-key event with kCGEventFlagMaskSecondaryFn,
+# so the tap arrives as `code=0x50 flags=[fn]`, and skhd matches modifiers
+# EXACTLY — a binding with no modifier can never match an event that has one.
+# Verified with a Hammerspoon event log; Karabiner was doing its job all along.
+#
+# The other two are insurance for flag combinations we have not observed.
+fn - 0x50    ; window
+0x50         ; window
+hyper - 0x50 ; window
+
+# Four ways out, because being stuck in a capture mode is the failure case.
+# Tapping caps_lock again toggles back out — same gesture in and out.
+window < fn - 0x50    ; default
+window < 0x50         ; default
+window < hyper - 0x50 ; default
+window < escape       ; default
+window < q            ; default
+window < return       ; default
+
+# ══════════════════════════════════════════════════════════════════════════
+#  WINDOW MODE
+# ══════════════════════════════════════════════════════════════════════════
+# Rule of thumb: navigation and layout tweaks KEEP you in the mode so you can
+# chain them; property toggles EXIT afterwards via `skhd -k escape`, which
+# trips the `window < escape` binding above.
+
+#== navigate
+# ── directional focus (stays in mode) ─────────────────────────────────────
+# Move focus by DIRECTION rather than by app — the main payoff of tiling.
+# DIR_SEL := north | east | south | west (doc/yabai.asciidoc:100).
+# h/j/k/l sit in the same physical spots on AZERTY as on QWERTY.
+window < h : /opt/homebrew/bin/yabai -m window --focus west     #= focus
+window < j : /opt/homebrew/bin/yabai -m window --focus south    #= focus
+window < k : /opt/homebrew/bin/yabai -m window --focus north    #= focus
+window < l : /opt/homebrew/bin/yabai -m window --focus east     #= focus
+
+# ── move windows around the tree (stays in mode) ──────────────────────────
+# --swap exchanges two windows in place. (--warp is the other option: it
+# re-parents the window, reshaping the tree rather than trading positions.)
+window < shift - h : /opt/homebrew/bin/yabai -m window --swap west   #= swap
+window < shift - j : /opt/homebrew/bin/yabai -m window --swap south  #= swap
+window < shift - k : /opt/homebrew/bin/yabai -m window --swap north  #= swap
+window < shift - l : /opt/homebrew/bin/yabai -m window --swap east   #= swap
+
+# ── rotate the layout (stays in mode) ─────────────────────────────────────
+# COUNTER-INTUITIVE: 270 is clockwise, 90 is counter-clockwise. The docs don't
+# say which is which; this was derived from window_node_rotate() in src/view.c
+# and confirmed by testing (a window on the right moves to the bottom under
+# --rotate 270, which is a clockwise quarter turn). Don't "fix" these numbers.
+#
+# Only does anything on a bsp space — a float space has no tree to rotate.
+window < r         : /opt/homebrew/bin/yabai -m space --rotate 270   #= rotate clockwise
+window < shift - r : /opt/homebrew/bin/yabai -m space --rotate 90    #= rotate counter
+
+# Reset all split ratios to equal, after dragging borders around.
+# The shipped example (examples/skhdrc:89) uses `0`, but a literal 0 is
+# unreachable on AZERTY without Shift, so this uses the physical key position.
+window < 0x1D : /opt/homebrew/bin/yabai -m space --balance   #= balance splits
+
+#== window
+# ── window properties (exit after) ────────────────────────────────────────
+# Fills the space with the focused window WITHOUT leaving your layout or
+# triggering a macOS fullscreen animation. Press again to drop back in place.
+window < f : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen; /opt/homebrew/bin/skhd -k "escape"   #= fullscreen
+
+# Sticky: the window follows you onto every space. Native yabai toggle.
+window < s : /opt/homebrew/bin/yabai -m window --toggle sticky; /opt/homebrew/bin/skhd -k "escape"   #= sticky
+
+# Always on top: no native toggle in v7 (`topmost` was replaced by the
+# `--sub-layer` setter), so this script reads the state and flips it.
+# Beeps if there's no focused window.
+window < t : /Users/roelvangils/.config/yabai/toggle-topmost.sh; /opt/homebrew/bin/skhd -k "escape"   #= always on top
+
+# Toggle tiling for the CURRENT space only (bsp <-> float). Other spaces keep
+# whatever they were. Resets to the ~/.yabairc default when yabai restarts.
+window < b : /Users/roelvangils/.config/yabai/toggle-layout.sh; /opt/homebrew/bin/skhd -k "escape"   #= bsp / float
+
+# PIP: scales the window to fill the display, honouring your padding
+# (window_manager.c:2410 -> scripting_addition_scale_window). Note it SCALES
+# rather than resizes — the window's contents are magnified, they do not
+# re-layout, which is what makes it different from zoom-fullscreen on `f`.
+# Requires the scripting addition, so it silently does nothing if the SA has
+# been lost after a Dock restart.
+#
+# On `i` rather than the `k` you asked for, because k is focus-north and part
+# of the hjkl core. Move it if you prefer — it is this one line.
+window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/skhd -k "escape"   #= pip (scale to display)
+
+#== scratchpad
+# ── scratchpad (exit after) ───────────────────────────────────────────────
+# A scratchpad is a labelled window you summon and dismiss from ANY space.
+# Assigning one automatically makes it floating and unmanaged.
+#
+# Usage: focus the window you want (a terminal is the classic choice), press
+# shift - p once to claim the "pad" label, then p from anywhere to show/hide
+# it. Press shift - p again on that window to release the label.
+window < p         : /opt/homebrew/bin/yabai -m window --toggle pad; /opt/homebrew/bin/skhd -k "escape"   #= show / hide
+window < shift - p : /Users/roelvangils/.config/yabai/toggle-scratchpad.sh pad; /opt/homebrew/bin/skhd -k "escape"   #= claim / release
+
+# If a scratchpad ever gets lost off-screen, this forcefully brings every
+# scratchpad window back to the front. Grouped with the other `p` bindings;
+# ctrl is free to use here because the mode captures everything anyway.
+window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt/homebrew/bin/skhd -k "escape"   #= recover lost pads
+
+# ══════════════════════════════════════════════════════════════════════════
+#  SPACES — always live, outside any mode
+# ══════════════════════════════════════════════════════════════════════════
+# ctrl is safe to claim globally: these replace the macOS "Move left/right a
+# space" shortcuts you disabled, and ctrl+digit isn't used by apps.
+
+# ── switch spaces: ctrl + arrows ──────────────────────────────────────────
+# Switching is instant (no Mission Control slide) because it goes through the
+# scripting addition rather than the public API.
+#
+# The `||` fallback provides wraparound: `--focus next` errors with
+# "could not locate the next space" on the last space, so we jump to the first.
+# `2>/dev/null` only hides the harmless "could not locate the next space"
+# message that yabai prints before the fallback runs — the wrap still happens.
+ctrl - left   : /opt/homebrew/bin/yabai -m space --focus prev 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus last
+ctrl - right  : /opt/homebrew/bin/yabai -m space --focus next 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus first
+
+# ── jump straight to a space: ctrl + top row ──────────────────────────────
+# Bound by HARDWARE KEYCODE, not by character. On AZERTY the top row produces
+# & é " ' ( § è ! ç à and the digits need Shift, so a literal `ctrl - 1` would
+# be unreachable. Keycodes refer to the physical key position instead, so these
+# work regardless of layout (and keep working if you switch to QWERTY).
+#
+# Keycodes are from kVK_ANSI_* in Carbon's Events.h. Note they are NOT
+# sequential — 5 and 6 are swapped, and 7/8/9/0 jump around. Don't "fix" them.
+#
+# These go through focus-space.sh, which beeps (system alert sound) when the
+# target space doesn't exist instead of failing silently.
+ctrl - 0x12   : /Users/roelvangils/.config/yabai/focus-space.sh 1   # & (kVK_ANSI_1)
+ctrl - 0x13   : /Users/roelvangils/.config/yabai/focus-space.sh 2   # é (kVK_ANSI_2)
+ctrl - 0x14   : /Users/roelvangils/.config/yabai/focus-space.sh 3   # " (kVK_ANSI_3)
+ctrl - 0x15   : /Users/roelvangils/.config/yabai/focus-space.sh 4   # ' (kVK_ANSI_4)
+ctrl - 0x17   : /Users/roelvangils/.config/yabai/focus-space.sh 5   # ( (kVK_ANSI_5)
+ctrl - 0x16   : /Users/roelvangils/.config/yabai/focus-space.sh 6   # § (kVK_ANSI_6)
+ctrl - 0x1A   : /Users/roelvangils/.config/yabai/focus-space.sh 7   # è (kVK_ANSI_7)
+ctrl - 0x1C   : /Users/roelvangils/.config/yabai/focus-space.sh 8   # ! (kVK_ANSI_8)
+ctrl - 0x19   : /Users/roelvangils/.config/yabai/focus-space.sh 9   # ç (kVK_ANSI_9)
+
+# à = end of the physical row -> LAST space, mirroring Cmd+9 in browsers
+# (which jumps to the last tab, not tab 9). Tracks your space count as it
+# changes, and can never fail, so it never beeps.
+ctrl - 0x1D   : /opt/homebrew/bin/yabai -m space --focus last   # à (kVK_ANSI_0)
+
+# ── the same, on the NUMPAD ───────────────────────────────────────────────
+# kVK_ANSI_Keypad0..9. Note 0x5A is skipped — that is F20, not a keypad key.
+#
+# UNCERTAIN UNTIL TESTED: macOS tags keypad events with
+# kCGEventFlagMaskNumericPad, and skhd matches modifiers EXACTLY — the same
+# trap that made a bare `0x50` silently fail for f19. skhd has no `numpad`
+# modifier to declare, so this works only if skhd masks that bit away rather
+# than comparing it. Arrow keys carry an intrinsic flag too and `ctrl - left`
+# works fine, which is the reason to expect masking. If these do nothing, the
+# fallback is a Karabiner rule remapping the keypad to keys skhd can match.
+ctrl - 0x53   : /Users/roelvangils/.config/yabai/focus-space.sh 1   # keypad 1
+ctrl - 0x54   : /Users/roelvangils/.config/yabai/focus-space.sh 2   # keypad 2
+ctrl - 0x55   : /Users/roelvangils/.config/yabai/focus-space.sh 3   # keypad 3
+ctrl - 0x56   : /Users/roelvangils/.config/yabai/focus-space.sh 4   # keypad 4
+ctrl - 0x57   : /Users/roelvangils/.config/yabai/focus-space.sh 5   # keypad 5
+ctrl - 0x58   : /Users/roelvangils/.config/yabai/focus-space.sh 6   # keypad 6
+ctrl - 0x59   : /Users/roelvangils/.config/yabai/focus-space.sh 7   # keypad 7
+ctrl - 0x5B   : /Users/roelvangils/.config/yabai/focus-space.sh 8   # keypad 8
+ctrl - 0x5C   : /Users/roelvangils/.config/yabai/focus-space.sh 9   # keypad 9
+ctrl - 0x52   : /opt/homebrew/bin/yabai -m space --focus last       # keypad 0 -> last
+
+# ── back to the previous space (toggle) ───────────────────────────────────
+ctrl - tab    : /opt/homebrew/bin/yabai -m space --focus recent
+
+# ══════════════════════════════════════════════════════════════════════════
+#  TAKE THIS WINDOW WITH ME — ctrl + cmd
+# ══════════════════════════════════════════════════════════════════════════
+# Same key layout as the ctrl bindings above, plus cmd: wherever ctrl would
+# send YOU, ctrl+cmd sends you AND the focused window.
+#
+# ctrl+cmd is genuinely free — a scan of com.apple.symbolichotkeys found zero
+# enabled macOS shortcuts using that combination. Worth re-checking after a
+# major OS update, since macOS shortcuts win over skhd (which is why the
+# Mission Control ctrl+arrow defaults had to be turned off by hand).
+#
+# The script resolves next/prev to an absolute index BEFORE moving. Chaining
+# `window --space next && space --focus next` would land you one space too
+# far, because "next" gets re-evaluated after the window has already moved.
+ctrl + cmd - left  : /Users/roelvangils/.config/yabai/move-window-to-space.sh prev follow
+ctrl + cmd - right : /Users/roelvangils/.config/yabai/move-window-to-space.sh next follow
+
+ctrl + cmd - 0x12  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow   # &
+ctrl + cmd - 0x13  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow   # é
+ctrl + cmd - 0x14  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow   # "
+ctrl + cmd - 0x15  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow   # '
+ctrl + cmd - 0x17  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow   # (
+ctrl + cmd - 0x16  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow   # §
+ctrl + cmd - 0x1A  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow   # è
+ctrl + cmd - 0x1C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow   # !
+ctrl + cmd - 0x19  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow   # ç
+
+# à = last space, mirroring `ctrl - à`
+ctrl + cmd - 0x1D  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last follow
+
+# ── the same, on the NUMPAD ───────────────────────────────────────────────
+ctrl + cmd - 0x53  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow
+ctrl + cmd - 0x54  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow
+ctrl + cmd - 0x55  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow
+ctrl + cmd - 0x56  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow
+ctrl + cmd - 0x57  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow
+ctrl + cmd - 0x58  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow
+ctrl + cmd - 0x59  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow
+ctrl + cmd - 0x5B  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow
+ctrl + cmd - 0x5C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow
+ctrl + cmd - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last follow
+
+# ══════════════════════════════════════════════════════════════════════════
+#  SEND THE WINDOW AWAY, STAY HERE — ctrl + alt
+# ══════════════════════════════════════════════════════════════════════════
+# Same layout again, without `follow`. Free of macOS: the only arrow-key
+# system shortcuts are Mission Control's ctrl+fn+left/right, and you disabled
+# those.
+#
+# KNOWN SIDE EFFECT, and it is the reason ctrl+alt was avoided everywhere
+# else. Karabiner turns left-ctrl + left-option pressed within 60ms of each
+# other into button1 + ctrl/alt, which is yabai's buttonless drag. So:
+#
+#   * These bindings MATCH either way. Karabiner keeps ctrl+alt asserted on
+#     everything it emits, so the arrow still arrives as ctrl+alt+arrow
+#     whether or not the chord fired.
+#   * But when the chord DOES fire, a mouse button is held down for as long
+#     as you hold the keys. `mouse_replay_click off` means no stray click is
+#     ever delivered, so with hands on the keyboard nothing happens — but
+#     move the mouse mid-hold and you will drag the window under the pointer.
+#
+# Two ways to avoid it if it bites: press ctrl and option more than 60ms
+# apart (the chord needs them simultaneous), or raise
+# basic.simultaneous_threshold_milliseconds' opposite — lower it further.
+ctrl + alt - left  : /Users/roelvangils/.config/yabai/move-window-to-space.sh prev
+ctrl + alt - right : /Users/roelvangils/.config/yabai/move-window-to-space.sh next
+
+ctrl + alt - 0x12  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1   # &
+ctrl + alt - 0x13  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2   # é
+ctrl + alt - 0x14  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3   # "
+ctrl + alt - 0x15  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4   # '
+ctrl + alt - 0x17  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5   # (
+ctrl + alt - 0x16  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6   # §
+ctrl + alt - 0x1A  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7   # è
+ctrl + alt - 0x1C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8   # !
+ctrl + alt - 0x19  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9   # ç
+ctrl + alt - 0x1D  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last
+
+# ── the same, on the NUMPAD ───────────────────────────────────────────────
+ctrl + alt - 0x53  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1
+ctrl + alt - 0x54  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2
+ctrl + alt - 0x55  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3
+ctrl + alt - 0x56  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4
+ctrl + alt - 0x57  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5
+ctrl + alt - 0x58  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6
+ctrl + alt - 0x59  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7
+ctrl + alt - 0x5B  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8
+ctrl + alt - 0x5C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9
+ctrl + alt - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last

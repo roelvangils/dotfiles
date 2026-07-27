@@ -1,0 +1,26 @@
+[metadata]
+name = mono
+description = Monochromatic theme
+tags = mono, colorblind
+inherit = True
+
+[styles]
+bar.back = none
+bar.complete = reverse
+bar.finished = bold
+bar.pulse = bold
+change = reverse
+count = bold
+error = italic reverse
+filename = bold
+filepath = bold underline
+highlight = italic reverse
+no_change = none
+num = bold
+progress.elapsed = none
+progress.percentage = bold
+progress.remaining = bold
+time = bold
+tz = none
+uuid = bold
+warning = bold italic

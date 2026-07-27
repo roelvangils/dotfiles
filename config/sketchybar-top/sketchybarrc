@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# This Sketchybar configuration file adds extra padding below the macOS menu bar,
+# which must be black for the effect to work. You need to create a symlink from
+# sketchbar to sketchybar-top, allowing you to run a separate instance of Sketchybar.
+
+bar=(
+    color=0xff000000
+    display=all
+    height=10
+    padding_left=0
+    padding_right=0
+    position=top
+    shadow=off
+    sticky=on
+    y_offset=-5
+)
+
+sketchybar-top --bar "${bar[@]}"

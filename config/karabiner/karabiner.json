@@ -1,0 +1,150 @@
+{
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "manipulators": [
+                            {
+                                "description": "caps_lock: hold = hyper (cmd+ctrl+opt+shift), quick tap = f19 -> skhd window mode",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic",
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f19"
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 250
+                                }
+                            }
+                        ],
+                        "description": "Caps Lock: hold = Hyper, tap = yabai window mode"
+                    },
+                    {
+                        "description": "Hold right-command + move mouse = drag window (yabai)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "right_command"
+                                },
+                                "description": "right-command = drag windows (yabai), instant",
+                                "to": [
+                                    {
+                                        "pointing_button": "button1",
+                                        "modifiers": [
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Left-ctrl + left-option + left-command together = resize window (yabai)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "simultaneous": [
+                                        {
+                                            "key_code": "left_control"
+                                        },
+                                        {
+                                            "key_code": "left_option"
+                                        },
+                                        {
+                                            "key_code": "left_command"
+                                        }
+                                    ],
+                                    "simultaneous_options": {
+                                        "key_down_order": "insensitive"
+                                    },
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "pointing_button": "button2",
+                                        "modifiers": [
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.simultaneous_threshold_milliseconds": 60
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Left-ctrl + left-option together = drag window (yabai)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "simultaneous": [
+                                        {
+                                            "key_code": "left_control"
+                                        },
+                                        {
+                                            "key_code": "left_option"
+                                        }
+                                    ],
+                                    "simultaneous_options": {
+                                        "key_down_order": "insensitive"
+                                    },
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "pointing_button": "button1",
+                                        "modifiers": [
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.simultaneous_threshold_milliseconds": 60
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": {
+                "keyboard_type_v2": "ansi"
+            }
+        }
+    ]
+}

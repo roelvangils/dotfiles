@@ -1,0 +1,13 @@
+[colors]
+table_header_color = "LightMagenta"
+cpu_core_colors = ["Cyan", "LightCyan", "Magenta", "LightMagenta"]
+all_cpu_color = "LightBlue"
+ram_color = "LightYellow"
+swap_color = "LightRed"
+rx_color = "LightGreen"
+tx_color = "LightMagenta"
+widget_title_color = "Gray"
+border_color = "DarkGray"
+highlighted_border_color = "Magenta"
+text_color = "White"
+graph_color = "LightBlue"

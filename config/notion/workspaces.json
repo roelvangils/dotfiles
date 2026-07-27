@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "environments": {
+    "prod": {
+      "79b4ec09-773b-4eea-8171-997bc86677c1": {
+        "id": "79b4ec09-773b-4eea-8171-997bc86677c1",
+        "name": "Eleven Ways"
+      }
+    }
+  }
+}

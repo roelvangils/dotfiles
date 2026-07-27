@@ -1,0 +1,27 @@
+[metadata]
+name = plain
+description = Plain theme with no colors
+tags = colorblind
+inherit = True
+
+[styles]
+bar.back = none
+bar.complete = none
+bar.finished = none
+bar.pulse = none
+change = none
+color = none
+count = none
+error = none
+filename = none
+filepath = none
+highlight = none
+no_change = none
+num = none
+progress.elapsed = none
+progress.percentage = none
+progress.remaining = none
+time = none
+tz = none
+uuid = none
+warning = none

@@ -1,0 +1,57 @@
+# ~/.gitconfig — Roel Van Gils
+
+[user]
+	name = Roel Van Gils
+	email = roel@elevenways.be
+
+# Personal projects under ~/repos use the personal address instead.
+# Adjust the path if the split should run along different lines.
+[includeIf "gitdir:~/repos/"]
+	path = ~/.gitconfig-personal
+
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true          # rebase instead of creating merge commits
+
+[push]
+	autoSetupRemote = true # no more --set-upstream on a first push
+	followTags = true
+
+[fetch]
+	prune = true           # drop remote branches that no longer exist
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	mnemonicPrefix = true
+
+[merge]
+	conflictstyle = zdiff3 # show the common ancestor in conflicts
+
+[rerere]
+	enabled = true         # remember how a conflict was resolved before
+
+[branch]
+	sort = -committerdate  # most recently used branches first
+
+[column]
+	ui = auto
+
+[core]
+	excludesfile = ~/.gitignore-global
+
+[alias]
+	s = status --short --branch
+	l = log --oneline --graph --decorate -20
+	last = log -1 --stat
+	undo = reset --soft HEAD~1
+	amend = commit --amend --no-edit

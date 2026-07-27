@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# ~/.yabairc — yabai v7.1.25 (AhsanFazal fork, macOS 27 Golden Gate beta)
+# Reload with: yabai --restart-service
+
+# ── scripting addition ────────────────────────────────────────────────────
+# Runs passwordless via the hash-pinned rule in /etc/sudoers.d/yabai.
+# The SA does NOT survive a Dock restart, hence the signal below.
+#
+# If yabai ever starts prompting for a password here, the binary was rebuilt
+# without refreshing the sudoers entry — re-run `make install-local`.
+# Quick test: `sudo -n yabai --load-sa` (exit 0 = fine, prompt = stale).
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+# ── layout ────────────────────────────────────────────────────────────────
+# Commented out for now -> yabai's built-in default is float, so nothing gets
+# tiled automatically. Re-enable once your skhd bindings are set up.
+# yabai -m config layout                      bsp
+yabai -m config window_placement            second_child
+yabai -m config window_insertion_point      focused
+yabai -m config split_ratio                 0.50
+yabai -m config auto_balance                off
+
+# ── gaps & padding (tuned for your single 1512x982 display) ───────────────
+# Modest values so you don't lose much usable area on a laptop screen.
+yabai -m config top_padding                 8
+yabai -m config bottom_padding              8
+yabai -m config left_padding                8
+yabai -m config right_padding               8
+yabai -m config window_gap                  8
+
+# ── mouse ─────────────────────────────────────────────────────────────────
+yabai -m config mouse_follows_focus         off
+yabai -m config focus_follows_mouse         off
+# Combined modifiers need the local patch in src/mouse_handler.h +
+# src/message.c -- see PATCHES.md in the yabai repo. Stock yabai accepts only
+# ONE modifier here and will reject this line.
+#
+# Must stay in sync with the Karabiner rules, which press button1 while
+# left-ctrl + left-option are held. Matching is EXACT: any extra modifier
+# (cmd, shift, fn) means no match and the click falls through to the app.
+yabai -m config mouse_modifier              ctrl+alt
+
+# Don't replay a hyper+click into the app when no drag followed. Without this,
+# every hyper chord held past the Karabiner threshold (hold caps_lock, press s)
+# ends as a stray click under the pointer. Also requires the local patch.
+yabai -m config mouse_replay_click          off
+yabai -m config mouse_drop_action           swap
+
+# ── appearance (these require the scripting addition) ─────────────────────
+# 'float' would draw shadows ONLY on floating windows, so tiled (bsp) windows
+# lose them. 'on' keeps shadows in both layouts.
+yabai -m config window_shadow               on
+yabai -m config window_animation_duration   0.15
+yabai -m config window_animation_easing     ease_out_circ
+
+# ── rules: leave alone what shouldn't be tiled ────────────────────────────
+yabai -m rule --add app="^System Settings$"                     manage=off
+yabai -m rule --add app="^Archive Utility$"                     manage=off
+yabai -m rule --add app="^Calculator$"                          manage=off
+yabai -m rule --add app="^Software Update$"                     manage=off
+yabai -m rule --add app="^Activity Monitor$"                    manage=off
+yabai -m rule --add app="^Keychain Access$"                     manage=off
+yabai -m rule --add app="^Raycast$"                             manage=off
+yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" manage=off
+
+echo "yabai configuration loaded.."

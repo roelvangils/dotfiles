@@ -1,0 +1,7 @@
+backend: file
+export:
+    ical:
+        file_name: tock_export.ics
+file:
+    path: /Users/roelvangils/.tock.txt
+time_format: "24"

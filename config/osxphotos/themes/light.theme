@@ -1,0 +1,27 @@
+[metadata]
+name = light
+description = Light mode theme
+tags = 
+inherit = True
+
+[styles]
+bar.back = grey23
+bar.complete = rgb(249,38,114)
+bar.finished = rgb(114,156,31)
+bar.pulse = rgb(249,38,114)
+change = bold dark_red
+color = #000000
+count = bold #005cc5
+error = bold italic underline #b31d28
+filename = bold #6f42c1
+filepath = bold #22863a
+highlight = bold #ffffff on #d73a49
+no_change = bold dark_green
+num = bold #005cc5
+progress.elapsed = bold #032f62
+progress.percentage = bold #6f42c1
+progress.remaining = bold #032f62
+time = bold #032f62
+tz = bold cyan
+uuid = bold #d73a49
+warning = bold italic underline #e36209

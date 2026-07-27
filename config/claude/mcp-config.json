@@ -1,0 +1,7 @@
+{
+  "mcpServers" : {
+    "approval_server" : {
+      "command" : "\/Applications\/Claw.app\/Contents\/Resources\/ApprovalMCPServer"
+    }
+  }
+}

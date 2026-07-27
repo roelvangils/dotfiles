@@ -1,0 +1,24 @@
+# Plugins loaded by antidote.
+# Order matters: highlighting and autosuggestions belong at the end.
+
+# Extra tab completions for hundreds of tools
+zsh-users/zsh-completions
+
+# Warns when you type a command that already has an alias
+MichaelAquilina/zsh-you-should-use
+
+# Automatically closes quotes and brackets
+hlissner/zsh-autopair
+
+# Type a prefix + up arrow to search history for matching commands
+zsh-users/zsh-history-substring-search
+
+# Tab completion through fzf, with fuzzy search and preview.
+# Requires: brew install fzf
+# Aloxaf/fzf-tab
+
+# Colours commands green or red as you type
+zdharma-continuum/fast-syntax-highlighting
+
+# Grey suggestion from history
+zsh-users/zsh-autosuggestions
