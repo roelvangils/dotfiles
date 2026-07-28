@@ -75,7 +75,8 @@ path=(
     "$PNPM_HOME"
 
     # Applications
-    "/Applications/Xcode.app/Contents/Developer/usr/bin"
+    # Geen Xcode-pad hier: dat breekt zodra je op Xcode-beta zit. Gebruik
+    # `xcrun <tool>`, dat volgt de actieve dir uit `xcode-select -p`.
     "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 )
 export PATH
