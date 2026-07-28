@@ -1,0 +1,115 @@
+{
+  "NSGlobalDomain": {
+    "\u001bView\u001bHide Sidebar": "^⎋",
+    "\u001bView\u001bShow Sidebar": "^⎋",
+    "\u001bWindow\u001bMove & Resize\u001bBottom": "^$",
+    "\u001bWindow\u001bMove & Resize\u001bLeft": "^$",
+    "\u001bWindow\u001bMove & Resize\u001bRight": "^$",
+    "\u001bWindow\u001bMove & Resize\u001bTop": "^$",
+    "\u001bWindow\u001bShow Tab Overview": "@$'",
+    "Center": "^$c",
+    "Centre": "^$c",
+    "Controls→Back": "@←",
+    "Go→Back": "@←",
+    "Go→Forward": "@→",
+    "Hide Others": "~^$o",
+    "Show All Tabs": "@$t",
+    "Show Next Tab": "@~→",
+    "Show Previous Tab": "@~←",
+    "Toggle Sidebar": "^⎋",
+    "Window→Activate Previous Tab": "@~←",
+    "Window→Active Next Tab": "@~→"
+  },
+  "com.apple.ActivityMonitor": {
+    "\u001bWindow\u001b": ""
+  },
+  "com.apple.Keynote": {
+    "\u001bFile\u001bPrint…": "@~^p",
+    "\u001bPlay\u001bPlay Slideshow": "@p",
+    "\u001bSlide\u001bGo To\u001bNext Slide": "@~↓",
+    "\u001bSlide\u001bGo To\u001bPrevious Slide": "@~↑"
+  },
+  "com.apple.Safari": {
+    "\u001bHistory\u001bBack": ""
+  },
+  "com.apple.TV": {
+    "\u001bControls\u001bBack": "@←"
+  },
+  "com.apple.finder": {
+    "\u001bGo\u001bBack": "@←",
+    "\u001bGo\u001bForward": "@→",
+    "\u001bView\u001bShow All Tabs": "@$'",
+    "\u001bView\u001bUse Groups": "@g"
+  },
+  "com.apple.reminders": {
+    "Mark as Completed": "@k"
+  },
+  "com.culturedcode.ThingsMac": {
+    "Focus in PowerThings": "@t"
+  },
+  "com.google.Chrome": {
+    "\u001bHistory\u001bBack": "@$←",
+    "\u001bHistory\u001bForward": "@$→"
+  },
+  "com.luckymarmot.Paw": {
+    "Response Body": "@e"
+  },
+  "com.mimestream.Mimestream": {
+    "\u001bView\u001bShow All Tabs": "@$'"
+  },
+  "com.openai.chat": {
+    "\u001bView\u001bToggle Sidebar": "^⎋"
+  },
+  "com.tinyspeck.slackmacgap": {
+    "\u001bGo\u001bHistory\u001bBack": "@~←",
+    "\u001bGo\u001bHistory\u001bForward": "@~→"
+  },
+  "company.thebrowser.Browser": {
+    "\u001bExtensions\u001bRaindrop.io": "@b"
+  },
+  "dev.warp.Warp-Stable": {
+    "\u001bTab\u001bRename the Current Tab": "@$t"
+  },
+  "ee.xero.Paper-setapp": {
+    "\u001bFile\u001bPrint…": "@~^p",
+    "\u001bFormat\u001bMore Formatting\u001bCode": "@e",
+    "\u001bFormat\u001bMore Formatting\u001bCode Block": "@~e",
+    "\u001bView\u001bPreview Mode": "@p"
+  },
+  "group.com.getharvest.Harvest.Documents": {
+    "\u001bView\u001bHide Sidebar": "^⎋",
+    "\u001bView\u001bShow Sidebar": "^⎋",
+    "\u001bWindow\u001bMove & Resize\u001bBottom": "^$↓",
+    "\u001bWindow\u001bMove & Resize\u001bLeft": "^$←",
+    "\u001bWindow\u001bMove & Resize\u001bRight": "^$→",
+    "\u001bWindow\u001bMove & Resize\u001bTop": "^$↑",
+    "Center": "^$c",
+    "Controls→Back": "@~←",
+    "Go→Back": "@←",
+    "Go→Forward": "@→",
+    "Show All Tabs": "@$t",
+    "Show Next Tab": "@~→",
+    "Show Previous Tab": "@~←"
+  },
+  "md.obsidian": {
+    "\u001bFormat\u001bCode": "@e",
+    "\u001bFormat\u001bHeading 1": "@~1",
+    "\u001bFormat\u001bHeading 2": "@~2",
+    "\u001bFormat\u001bHeading 3": "@~3",
+    "\u001bFormat\u001bHeading 4": "@~4",
+    "\u001bView\u001bZoom Out": "@~-"
+  },
+  "net.ia.presenter": {
+    "\u001bInsert\u001bTitle": "@~1"
+  },
+  "net.sourceforge.skim-app.skim": {
+    "\u001bView\u001bHide Contents Pane": "^⎋",
+    "\u001bView\u001bShow Contents Pane": "^⎋",
+    "\u001bWindow\u001bShow Next Tab": "@~→",
+    "\u001bWindow\u001bShow Previous Tab": "@~←"
+  },
+  "org.yanex.marta": {
+    "\u001bWindow\u001bActivate Next Tab": "@~→",
+    "\u001bWindow\u001bActivate Previous Tab": "@~←"
+  }
+}
