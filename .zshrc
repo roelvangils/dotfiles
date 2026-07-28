@@ -105,9 +105,13 @@ fi
 # ============================================================
 #  MAGIC ENTER
 # ============================================================
-# Enter on an empty line: 'git status' in a repo, 'ls -lh' elsewhere.
+# Enter on an empty line: 'git status' in a repo, a 'dir' listing elsewhere.
 : ${MAGIC_ENTER_GIT_COMMAND:="git status -u ."}
-: ${MAGIC_ENTER_OTHER_COMMAND:="ls -lh ."}
+if (( $+functions[dir] )); then
+    : ${MAGIC_ENTER_OTHER_COMMAND:="dir"}
+else
+    : ${MAGIC_ENTER_OTHER_COMMAND:="ls -lh ."}
+fi
 
 magic-enter() {
     [[ -n "$BUFFER" || "$CONTEXT" != start ]] && return
