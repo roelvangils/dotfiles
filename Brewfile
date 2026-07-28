@@ -79,6 +79,13 @@ brew "mods"
 brew "ddgr"                 # DuckDuckGo search, used by lmgtfy
 
 # ============================================================
+#  MAC APP STORE
+# ============================================================
+# Needs `mas` and a signed-in App Store account.
+brew "mas"
+mas "Consent-O-Matic", id: 1606897889   # cookie banners, open source, Aarhus University
+
+# ============================================================
 #  CASKS
 # ============================================================
 cask "ghostty"
