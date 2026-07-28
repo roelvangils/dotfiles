@@ -183,10 +183,9 @@ alias b='cd ..'
 alias v='cd /Volumes'
 alias dl='cd ~/Downloads'
 alias gd='cd "$HOME/Library/CloudStorage/GoogleDrive-roel.van.gils@elevenways.be/"'
-# Offers and their boilerplate. Obsidian's iOS app only reads its own iCloud
-# container, which is why the vault lives this far down.
-alias o='cd "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/The Vault/Folio"'
-alias vault='cd "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/The Vault"'
+# Offers and their boilerplate. ~/vault links into Obsidian's iCloud
+# container, the only place its iOS app reads a vault from.
+alias o='cd ~/vault/Folio'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
