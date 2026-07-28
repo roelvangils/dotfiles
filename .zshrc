@@ -48,6 +48,18 @@ bindkey -M menuselect '/' history-incremental-search-backward
 alias ls='ls -G'
 
 # ============================================================
+#  AUTOLOADED FUNCTIONS
+# ============================================================
+# Functions kept in their own repos, loaded lazily: the file is read the
+# first time the command is used, and then runs in this shell instead of
+# starting a new zsh the way a script would.
+# Must come before compinit, which scans fpath.
+if [ -d "$HOME/repos/dir" ]; then
+    fpath=("$HOME/repos/dir" $fpath)
+    autoload -Uz dir              # enhanced directory listing, wraps eza
+fi
+
+# ============================================================
 #  COMPLETIONS
 # ============================================================
 # Full rebuild once a day, cached for the rest.
@@ -175,7 +187,6 @@ alias ....='cd ../../..'
 alias f='open . -a Finder'
 alias m='open . -a Marta'
 alias tree="tree -a -I 'node_modules'"
-alias dira='eza -alh --git --icons --time-style long-iso --sort modified --group-directories-first'
 alias del='trash'                           # move to trash instead of deleting
 
 # --- Clipboard ---
