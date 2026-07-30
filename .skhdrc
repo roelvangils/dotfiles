@@ -44,9 +44,6 @@
 # Reached from window mode by pressing `m`. Same capture-all behaviour; the HUD
 # switches to its move variant (title + follow/stay hint + space picker).
 :: move @ : /opt/homebrew/bin/hs -c 'yabaiHudShow("move")' > /dev/null 2>&1
-# Reached from window mode by pressing space. Numpad keys become the 8-way move
-# grid (arrows already nudge in window mode); the HUD lights the grid's numbers.
-:: grid @ : /opt/homebrew/bin/hs -c 'yabaiHudShow("grid")' > /dev/null 2>&1
 
 # ── enter / leave ─────────────────────────────────────────────────────────
 # PRIMARY: a quick TAP on caps_lock. Karabiner's `to_if_alone` on that key
@@ -156,13 +153,12 @@ window < b : /Users/roelvangils/.config/yabai/toggle-layout.sh   #= bsp / float
 # of the hjkl core. Move it if you prefer — it is this one line.
 window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/skhd -k "escape"   #= pip (scale to display)
 
-# ── nudge the focused window ──────────────────────────────────────────────
-# The ARROW keys are handled in Hammerspoon (mouse-drag.lua), not here: it moves
-# the window through the Accessibility API for a smooth glide with no drop-shadow
-# flicker (yabai's animated --move flickers the shadow), and holding a key slides
-# the window continuously. Its event tap swallows the arrows while the HUD is up.
-# Space toggles the numpad grid (diagonals + centre) -> grid mode below.
-window < space ; grid
+# ── nudge / size the focused window ───────────────────────────────────────
+# The ARROW keys and SPACE are handled in Hammerspoon (mouse-drag.lua), not here.
+# Arrows move the window through the Accessibility API for a smooth glide with no
+# drop-shadow flicker (yabai's animated --move flickers the shadow); holding a key
+# slides it, Shift dashes. Space cycles the window through centre / reasonable /
+# almost-max / original sizes. The HS event tap swallows both while the HUD is up.
 
 #== scratchpad
 # ── scratchpad (exit after) ───────────────────────────────────────────────
@@ -190,6 +186,10 @@ window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt
 #
 # The one labelled row here is `m`, which starts the move-to-space chord below.
 window < m ; move   #= move to space (⇧ stay)
+# tab cycles spaces WITHOUT leaving the mode, re-rendering so the indicator
+# tracks the current space (wraparound like the global ctrl+arrow bindings).
+window < tab         : /opt/homebrew/bin/yabai -m space --focus next 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus first; /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1   #= next space (⇧ prev)
+window < shift - tab : /opt/homebrew/bin/yabai -m space --focus prev 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus last; /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1
 # top row -> kVK_ANSI_1..9 (5 and 6 are swapped; 7/8/9 jump around)
 window < 0x12 : /Users/roelvangils/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
 window < 0x13 : /Users/roelvangils/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
@@ -270,55 +270,6 @@ move < shift - 0x58 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6
 move < shift - 0x59 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
 move < shift - 0x5B : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
 move < shift - 0x5C : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
-
-# ══════════════════════════════════════════════════════════════════════════
-#  GRID MODE — reached with space from window mode
-# ══════════════════════════════════════════════════════════════════════════
-# "Traditional" numpad navigation for nudging the focused window: numbers become
-# an 8-way grid plus centre. Arrows also work here (as they do in window mode).
-# Each move STAYS in the mode so you can keep nudging; space toggles back.
-#
-#   7 8 9   ul  up  ur          4 = left   6 = right
-#   4 5 6   left ctr right      5 = centre on display
-#   1 2 3   dl  down dr
-#
-# By keycode for AZERTY-safety, both numpad and top row. GRIDSTEP is the default
-# 50px baked into move-window-grid.sh.
-
-# ── ways out ──────────────────────────────────────────────────────────────
-# space toggles numpad nav OFF (back to window mode, numbers switch spaces
-# again); escape / q / caps leave the HUD entirely.
-grid < space        ; window
-grid < escape       ; default
-grid < q            ; default
-grid < 0x50         ; default
-grid < fn - 0x50    ; default
-grid < hyper - 0x50 ; default
-
-# Arrows are handled in Hammerspoon (smooth AX sliding), same as window mode --
-# its tap is active whenever the HUD is up, so they work here too, unbound below.
-
-# ── numpad: 8-way + centre (kVK_ANSI_Keypad*) ─────────────────────────────
-grid < 0x59 : /Users/roelvangils/.config/yabai/move-window-grid.sh ul       # kp7
-grid < 0x5B : /Users/roelvangils/.config/yabai/move-window-grid.sh up       # kp8
-grid < 0x5C : /Users/roelvangils/.config/yabai/move-window-grid.sh ur       # kp9
-grid < 0x56 : /Users/roelvangils/.config/yabai/move-window-grid.sh left     # kp4
-grid < 0x57 : /Users/roelvangils/.config/yabai/move-window-grid.sh center   # kp5
-grid < 0x58 : /Users/roelvangils/.config/yabai/move-window-grid.sh right    # kp6
-grid < 0x53 : /Users/roelvangils/.config/yabai/move-window-grid.sh dl       # kp1
-grid < 0x54 : /Users/roelvangils/.config/yabai/move-window-grid.sh down     # kp2
-grid < 0x55 : /Users/roelvangils/.config/yabai/move-window-grid.sh dr       # kp3
-
-# ── top row: 8-way + centre (kVK_ANSI_1..9) ───────────────────────────────
-grid < 0x1A : /Users/roelvangils/.config/yabai/move-window-grid.sh ul       # 7
-grid < 0x1C : /Users/roelvangils/.config/yabai/move-window-grid.sh up       # 8
-grid < 0x19 : /Users/roelvangils/.config/yabai/move-window-grid.sh ur       # 9
-grid < 0x15 : /Users/roelvangils/.config/yabai/move-window-grid.sh left     # 4
-grid < 0x17 : /Users/roelvangils/.config/yabai/move-window-grid.sh center   # 5
-grid < 0x16 : /Users/roelvangils/.config/yabai/move-window-grid.sh right    # 6
-grid < 0x12 : /Users/roelvangils/.config/yabai/move-window-grid.sh dl       # 1
-grid < 0x13 : /Users/roelvangils/.config/yabai/move-window-grid.sh down     # 2
-grid < 0x14 : /Users/roelvangils/.config/yabai/move-window-grid.sh dr       # 3
 
 # ══════════════════════════════════════════════════════════════════════════
 #  SPACES — always live, outside any mode
