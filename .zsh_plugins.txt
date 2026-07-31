@@ -5,7 +5,7 @@
 zsh-users/zsh-completions
 
 # Warns when you type a command that already has an alias
-MichaelAquilina/zsh-you-should-use
+# MichaelAquilina/zsh-you-should-use
 
 # Automatically closes quotes and brackets
 hlissner/zsh-autopair

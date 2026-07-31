@@ -242,3 +242,7 @@ cask "latest"
 #   nvm, pyenv, rbenv, python@3.11  -> mise handles language versions
 #   thefuck                         -> slow, removed from .zshrc
 #   zsh-autosuggestions, zsh-syntax-highlighting -> antidote provides these
+
+# Folio: PDF page counts and text extraction
+brew "poppler"
+brew "cpdf"

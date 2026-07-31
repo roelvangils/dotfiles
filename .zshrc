@@ -4,6 +4,9 @@
 # Every line that depends on an external tool is guarded, so a machine
 # without that tool starts without errors.
 
+# Let's start with a joke
+curl -s https://icanhazdadjoke.com/ | cowsay
+
 # ============================================================
 #  PLUGINS
 # ============================================================
