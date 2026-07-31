@@ -65,4 +65,19 @@ yabai -m rule --add app="^Keychain Access$"                     manage=off
 yabai -m rule --add app="^Raycast$"                             manage=off
 yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" manage=off
 
+# ── space labels ──────────────────────────────────────────────────────────
+# What each space is for (see roelOS/content/spaces.md). Labels are also usable
+# as identifiers in commands, e.g. yabai -m window --space "Coding & Automation".
+# The window-mode HUD shows the current space's label in its top-right corner.
+# Labelling a space that doesn't exist just errors, so this is quiet about it.
+yabai -m space 1 --label "Sandbox"                 2>/dev/null
+yabai -m space 2 --label "Browsing & Research"     2>/dev/null
+yabai -m space 3 --label "Writing & Deep Work"     2>/dev/null
+yabai -m space 4 --label "Mail, Calendar & Tasks"  2>/dev/null
+yabai -m space 5 --label "Slack, Notion & Harvest" 2>/dev/null
+yabai -m space 6 --label "Chat & Personal Comms"   2>/dev/null
+yabai -m space 7 --label "Coding & Automation"     2>/dev/null
+yabai -m space 8 --label "Music & Movies"          2>/dev/null
+yabai -m space 9 --label "Monitoring & Dashboards" 2>/dev/null
+
 echo "yabai configuration loaded.."
