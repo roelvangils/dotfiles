@@ -31,6 +31,9 @@
 *.bak
 *.bak-*
 
+# Karabiner writes timestamped auto-backups here on every change
+config/karabiner/automatic_backups/
+
 # macOS
 .DS_Store
 
