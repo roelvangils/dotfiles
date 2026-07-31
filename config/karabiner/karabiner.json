@@ -4,58 +4,39 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Caps Lock: hold = Hyper, tap = yabai window mode",
                         "manipulators": [
                             {
                                 "description": "caps_lock: hold = hyper (cmd+ctrl+opt+shift), quick tap = f19 -> skhd window mode",
                                 "from": {
                                     "key_code": "caps_lock",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                    "modifiers": { "optional": ["any"] }
                                 },
+                                "parameters": { "basic.to_if_alone_timeout_milliseconds": 250 },
                                 "to": [
                                     {
                                         "key_code": "left_shift",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
+                                        "modifiers": ["left_command", "left_control", "left_option"]
                                     }
                                 ],
-                                "type": "basic",
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "f19"
-                                    }
-                                ],
-                                "parameters": {
-                                    "basic.to_if_alone_timeout_milliseconds": 250
-                                }
+                                "to_if_alone": [{ "key_code": "f19" }],
+                                "type": "basic"
                             }
-                        ],
-                        "description": "Caps Lock: hold = Hyper, tap = yabai window mode"
+                        ]
                     },
                     {
                         "description": "Hold right-command + move mouse = drag window (yabai)",
                         "manipulators": [
                             {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_command"
-                                },
                                 "description": "right-command = drag windows (yabai), instant",
+                                "from": { "key_code": "right_command" },
                                 "to": [
                                     {
-                                        "pointing_button": "button1",
-                                        "modifiers": [
-                                            "left_control",
-                                            "left_option"
-                                        ]
+                                        "modifiers": ["left_control", "left_option"],
+                                        "pointing_button": "button1"
                                     }
-                                ]
+                                ],
+                                "type": "basic"
                             }
                         ]
                     },
@@ -63,40 +44,23 @@
                         "description": "Left-ctrl + left-option + left-command together = resize window (yabai)",
                         "manipulators": [
                             {
-                                "type": "basic",
                                 "from": {
+                                    "modifiers": { "optional": ["any"] },
                                     "simultaneous": [
-                                        {
-                                            "key_code": "left_control"
-                                        },
-                                        {
-                                            "key_code": "left_option"
-                                        },
-                                        {
-                                            "key_code": "left_command"
-                                        }
+                                        { "key_code": "left_control" },
+                                        { "key_code": "left_option" },
+                                        { "key_code": "left_command" }
                                     ],
-                                    "simultaneous_options": {
-                                        "key_down_order": "insensitive"
-                                    },
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                    "simultaneous_options": { "key_down_order": "insensitive" }
                                 },
+                                "parameters": { "basic.simultaneous_threshold_milliseconds": 60 },
                                 "to": [
                                     {
-                                        "pointing_button": "button2",
-                                        "modifiers": [
-                                            "left_control",
-                                            "left_option"
-                                        ]
+                                        "modifiers": ["left_control", "left_option"],
+                                        "pointing_button": "button2"
                                     }
                                 ],
-                                "parameters": {
-                                    "basic.simultaneous_threshold_milliseconds": 60
-                                }
+                                "type": "basic"
                             }
                         ]
                     },
@@ -104,47 +68,40 @@
                         "description": "Left-ctrl + left-option together = drag window (yabai)",
                         "manipulators": [
                             {
-                                "type": "basic",
                                 "from": {
+                                    "modifiers": { "optional": ["any"] },
                                     "simultaneous": [
-                                        {
-                                            "key_code": "left_control"
-                                        },
-                                        {
-                                            "key_code": "left_option"
-                                        }
+                                        { "key_code": "left_control" },
+                                        { "key_code": "left_option" }
                                     ],
-                                    "simultaneous_options": {
-                                        "key_down_order": "insensitive"
-                                    },
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                    "simultaneous_options": { "key_down_order": "insensitive" }
                                 },
+                                "parameters": { "basic.simultaneous_threshold_milliseconds": 60 },
                                 "to": [
                                     {
-                                        "pointing_button": "button1",
-                                        "modifiers": [
-                                            "left_control",
-                                            "left_option"
-                                        ]
+                                        "modifiers": ["left_control", "left_option"],
+                                        "pointing_button": "button1"
                                     }
                                 ],
-                                "parameters": {
-                                    "basic.simultaneous_threshold_milliseconds": 60
-                                }
+                                "type": "basic"
                             }
                         ]
                     }
                 ]
             },
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 50504,
+                        "vendor_id": 1133
+                    },
+                    "ignore": true
+                }
+            ],
             "name": "Default profile",
             "selected": true,
-            "virtual_hid_keyboard": {
-                "keyboard_type_v2": "ansi"
-            }
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]
 }
