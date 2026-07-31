@@ -39,11 +39,11 @@
 # A binding with no `#=` is simply left off the sheet. Rows whose command ends
 # in `skhd -k escape` are detected automatically and marked as leaving the
 # mode — that isn't annotated by hand either.
-:: default : /opt/homebrew/bin/hs -c 'yabaiHudHide()' > /dev/null 2>&1
-:: window @ : /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1
+:: default : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudHide()' > /dev/null 2>&1
+:: window @ : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow()' > /dev/null 2>&1
 # Reached from window mode by pressing `m`. Same capture-all behaviour; the HUD
 # switches to its move variant (title + follow/stay hint + space picker).
-:: move @ : /opt/homebrew/bin/hs -c 'yabaiHudShow("move")' > /dev/null 2>&1
+:: move @ : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
 
 # ── enter / leave ─────────────────────────────────────────────────────────
 # PRIMARY: a quick TAP on caps_lock. Karabiner's `to_if_alone` on that key
@@ -128,12 +128,12 @@ window < f : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen; /opt/ho
 # Sticky: the window follows you onto every space. Native yabai toggle.
 # Flip the HUD chip FIRST (instant, from cache), then run the real toggle -- so
 # the highlight tracks the keypress instead of waiting on yabai.
-window < s : /opt/homebrew/bin/hs -c 'yabaiHudFlip("sticky")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle sticky   #= sticky
+window < s : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("sticky")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle sticky   #= sticky
 
 # Always on top: no native toggle in v7 (`topmost` was replaced by the
 # `--sub-layer` setter), so this script reads the state and flips it.
 # Beeps if there's no focused window. Chip flipped first, same as sticky.
-window < t : /opt/homebrew/bin/hs -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; /Users/roelvangils/.config/yabai/toggle-topmost.sh   #= always on top
+window < t : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; /Users/roelvangils/.config/yabai/toggle-topmost.sh   #= always on top
 
 # Toggle tiling for the CURRENT space only (bsp <-> float). Other spaces keep
 # whatever they were. Resets to the ~/.yabairc default when yabai restarts.
