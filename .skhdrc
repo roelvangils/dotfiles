@@ -186,10 +186,13 @@ window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt
 #
 # The one labelled row here is `m`, which starts the move-to-space chord below.
 window < m ; move   #= move to space (⇧ stay)
-# tab cycles spaces WITHOUT leaving the mode, re-rendering so the indicator
-# tracks the current space (wraparound like the global ctrl+arrow bindings).
-window < tab         : /opt/homebrew/bin/yabai -m space --focus next 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus first; /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1   #= next space (⇧ prev)
-window < shift - tab : /opt/homebrew/bin/yabai -m space --focus prev 2>/dev/null || /opt/homebrew/bin/yabai -m space --focus last; /opt/homebrew/bin/hs -c 'yabaiHudShow()' > /dev/null 2>&1
+# tab / shift-tab cycle spaces without leaving the mode. HANDLED IN HAMMERSPOON
+# (mouse-drag.lua), not here: skhd fired a yabai call plus a full `hs -c` CLI
+# invocation on every key repeat, which choked when tab was held down. The HUD's
+# event tap swallows tab first, so this line never actually runs -- it exists so
+# the binding still shows up on the cheat sheet (which is generated from this
+# file). Keep the label in sync with the Hammerspoon behaviour.
+window < tab : true   #= next space (⇧ prev)
 # top row -> kVK_ANSI_1..9 (5 and 6 are swapped; 7/8/9 jump around)
 window < 0x12 : /Users/roelvangils/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
 window < 0x13 : /Users/roelvangils/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
