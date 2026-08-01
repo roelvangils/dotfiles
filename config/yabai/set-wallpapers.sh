@@ -9,7 +9,7 @@
 #
 # ── EDIT HERE ─────────────────────────────────────────────────────────────
 # Which set gets applied when no --set is given (this is what ~/.yabairc uses).
-ACTIVE_SET="ares"
+ACTIVE_SET="et"
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 
@@ -191,6 +191,36 @@ load_set() {
             SET_MODE="fill"
             SET_FILES=()   # glob
             ;;
+        walle)
+            # TMDB backdrops, full-frame — `fill`. 20 images at native 4K, and the
+            # most varied set of the lot: wide hue range AND wide brightness range,
+            # so the nine separate easily.
+            SET_DIR="$WALLPAPER_DIR/WALL-E"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        raiders)
+            # TMDB backdrops, full-frame — `fill`. 11 at native 4K; two spares.
+            SET_DIR="$WALLPAPER_DIR/Raiders of the Lost Ark"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        closeencounters)
+            # TMDB backdrops, full-frame — `fill`. EXACTLY nine at native 4K, so
+            # every image is in use and there are no spares to swap in. All nine
+            # are distinct though, which is rare for a TMDB set.
+            SET_DIR="$WALLPAPER_DIR/Close Encounters"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        hollywood)
+            # Once Upon a Time in Hollywood. TMDB backdrops, full-frame — `fill`.
+            # 20 at native 4K with plenty of genuinely distinct frames, which for
+            # a TMDB set is unusual. Widest colour range after WALL-E.
+            SET_DIR="$WALLPAPER_DIR/Once Upon a Time in Hollywood"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
         *)
             echo "set-wallpapers: unknown set '$1'" >&2
             echo "  try: $SETS_ALL_STATIC" >&2
@@ -201,7 +231,7 @@ load_set() {
     return 0
 }
 # Declared outside load_set so the error branch above can name the sets too.
-SETS_ALL_STATIC="photos 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark severance formankind silo foundation"
+SETS_ALL_STATIC="photos 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark severance formankind silo foundation walle raiders closeencounters hollywood"
 # ──────────────────────────────────────────────────────────────────────────
 #
 # HOW THIS WORKS, AND WHY IT LOOKS CLUMSY
