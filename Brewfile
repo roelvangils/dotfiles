@@ -36,6 +36,8 @@ brew "trash"                # used by the del alias
 brew "yazi"                 # file manager, used by the y function
 brew "midnight-commander"   # used by the mc alias
 brew "micro"                # editor used by the hosts/vhosts aliases
+brew "fastfetch"            # system info, neofetch successor
+brew "macchina"             # system info in Rust, TOML-themable
 
 # ============================================================
 #  DATA & TEXT
@@ -128,6 +130,20 @@ cask "startupfolder"
 cask "gcloud-cli"
 
 # ============================================================
+#  QUICK LOOK
+# ============================================================
+# These are apps, not .qlgenerator plug-ins. Apple dropped that mechanism in
+# macOS 12, so the ones every old blog post recommends — QLColorCode,
+# QLStephen, QuickLookJSON — no longer work. Both of these ship a CLI too.
+#
+# After installing: open each app once so macOS registers the extension, then
+# tick it under System Settings > General > Login Items & Extensions >
+# Quick Look. They are unsigned open source, so the first launch needs an
+# allow under Privacy & Security.
+cask "syntax-highlight"     # source code with syntax highlighting, ~180 languages
+cask "qlmarkdown"           # Markdown incl. front matter, tables, Mermaid
+
+# ============================================================
 #  OPTIONAL — uncomment what you want back
 # ============================================================
 
@@ -140,7 +156,6 @@ cask "gcloud-cli"
 # brew "htop"
 # brew "glances"
 # brew "gdu"                # disk usage
-# brew "fastfetch"
 # brew "lf"
 # brew "nnn"
 # brew "nushell"
