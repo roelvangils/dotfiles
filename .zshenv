@@ -8,7 +8,13 @@
 #  CORE
 # ============================================================
 export LANG=en_US.UTF-8
-export EDITOR='code --wait'        # --wait is required for git commit
+# VS Code needs a GUI session; over SSH or in headless jobs a tool
+# waiting on $EDITOR would block forever, so fall back to micro there.
+if [[ -n "$SSH_CONNECTION" ]]; then
+    export EDITOR='micro'
+else
+    export EDITOR='code --wait'    # --wait is required for git commit
+fi
 export VISUAL="$EDITOR"
 export PAGER='less'
 export LESS='-R'                   # keep colours in less

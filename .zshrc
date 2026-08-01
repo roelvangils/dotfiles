@@ -40,6 +40,9 @@ setopt AUTO_CD              # 'repos' instead of 'cd repos'
 setopt GLOB_DOTS            # include hidden files in globs
 setopt EXTENDED_GLOB
 setopt INTERACTIVE_COMMENTS # allow # comments on the command line
+setopt HIST_IGNORE_SPACE    # a leading space keeps a command out of history
+unsetopt FLOW_CONTROL       # free Ctrl-S / Ctrl-Q
+bindkey -e                  # emacs keymap, even if $EDITOR ever contains "vi"
 
 zmodload zsh/complist
 zstyle ':completion:*' menu yes select

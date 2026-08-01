@@ -22,6 +22,16 @@
 [pull]
 	rebase = true          # rebase instead of creating merge commits
 
+[rebase]
+	autosquash = true      # honour fixup!/squash! commits automatically
+	autostash = true       # stash/unstash around pull --rebase on a dirty tree
+
+[commit]
+	verbose = true         # show the diff in the commit message editor
+
+[help]
+	autocorrect = prompt   # suggest the correction, ask before running
+
 [push]
 	autoSetupRemote = true # no more --set-upstream on a first push
 	followTags = true
@@ -48,6 +58,7 @@
 
 [core]
 	excludesfile = ~/.gitignore-global
+	untrackedCache = true  # cache untracked-file scans; speeds up git status
 
 [alias]
 	s = status --short --branch
