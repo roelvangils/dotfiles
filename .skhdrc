@@ -430,3 +430,12 @@ ctrl + alt - 0x59  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7
 ctrl + alt - 0x5B  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8
 ctrl + alt - 0x5C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9
 ctrl + alt - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last
+
+# ══════════════════════════════════════════════════════════════════════════
+#  PRAATPAAL
+# ══════════════════════════════════════════════════════════════════════════
+# F18 (kVK_F18 = 0x4F) focuses the Warp tab of the Claude session that last
+# spoke a praatpaal cue. Both variants because of the same fn-flag trap
+# documented at the f19 binding above.
+fn - 0x4F : /Users/roelvangils/repos/praatpaal/praatpaal goto
+0x4F      : /Users/roelvangils/repos/praatpaal/praatpaal goto
