@@ -24,7 +24,7 @@ brew "mise"                 # node, python, ruby version manager
 brew "direnv"               # per-directory environment variables
 brew "zoxide"               # smarter cd
 brew "fzf"                  # fuzzy finder
-brew "coreutils"            # GNU utilities, used via the gnubin path
+brew "coreutils"            # GNU utilities, available as g-prefixed commands
 
 # ============================================================
 #  FILES & SEARCH
@@ -41,7 +41,7 @@ brew "micro"                # editor used by the hosts/vhosts aliases
 #  DATA & TEXT
 # ============================================================
 brew "jq"
-brew "glow"                 # markdown in the terminal, used by the article alias
+brew "glow"                 # markdown in the terminal
 brew "html2markdown"        # used by the html2md alias
 brew "pandoc"
 brew "gum"                  # pretty shell scripts
@@ -58,7 +58,7 @@ brew "deno"
 brew "rust"
 brew "oxlint"
 brew "perl"
-brew "shc"                  # shell script compiler, used by shc-intel
+brew "shc"                  # shell script compiler
 brew "openjdk@21"           # JAVA_HOME in .zshrc points here
 brew "php"
 brew "uv"                   # fast Python package installer
@@ -99,7 +99,7 @@ brew "skhd"                 # hotkey daemon; formula lives in asmvik/formulae
 #  AI
 # ============================================================
 brew "llm"                  # replaced the archived mods; used by the ai alias
-brew "ddgr"                 # DuckDuckGo search, used by lmgtfy
+brew "ddgr"                 # DuckDuckGo search from the terminal
 
 # ============================================================
 #  MAC APP STORE

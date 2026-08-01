@@ -2,24 +2,24 @@
 
 # JankyBorders configuration optimized for accessibility
 # This configuration uses:
-# - High contrast colors for active windows
-# - Thicker borders for better visibility
+# - High contrast colors for active windows (bright yellow, full opacity)
+# - Subtle dark gray for inactive windows with high opacity
+# - No background fill to avoid visual clutter
+# - Thicker borders (6.0) for better visibility
 # - Round corners for visual distinction
+# - HiDPI support for retina displays
 # - Accessibility API focus for better compatibility
+# - Blacklist for system UI elements that don't need borders
+#
+# NOTE: keep this a single command with no comments between the
+# continuation lines — a `#` inside a `\`-continued command swallows the
+# backslash and silently drops every option after it.
 
-# Use round style for softer appearance
 borders style=round \
-  # High contrast yellow border for active windows (bright with full opacity)
   active_color=0xFFFFD700 \
-  # Subtle dark gray for inactive windows with high opacity
   inactive_color=0xCC333333 \
-  # No background fill to avoid visual clutter
   background_color=0x00000000 \
-  # Thicker border width for better visibility
   width=6.0 \
-  # Enable HiDPI support for retina displays
   hidpi=on \
-  # Enable accessibility API for better focus detection
   ax_focus=on \
-  # Blacklist system UI elements that don't need borders
   blacklist="Finder,SystemUIServer,Control Center,Menu Bar,Notification Center"

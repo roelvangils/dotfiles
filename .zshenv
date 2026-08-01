@@ -81,12 +81,3 @@ path=(
 )
 export PATH
 
-# ============================================================
-#  OTHER PATHS
-# ============================================================
-export MANPATH="/opt/homebrew/opt/coreutils/libexec/gnuman:$MANPATH"
-
-# Own completions
-if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then
-    export FPATH="$HOME/.zsh/completions:$FPATH"
-fi

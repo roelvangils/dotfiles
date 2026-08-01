@@ -38,7 +38,6 @@ fi
 unsetopt BEEP
 setopt AUTO_CD              # 'repos' instead of 'cd repos'
 setopt GLOB_DOTS            # include hidden files in globs
-setopt NOMATCH
 setopt EXTENDED_GLOB
 setopt INTERACTIVE_COMMENTS # allow # comments on the command line
 
@@ -48,16 +47,11 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=
 _comp_options+=(globdots)
 zle_highlight=('paste:none')
 
-autoload -U up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
 autoload -Uz colors && colors
 
 bindkey '^H' backward-kill-word                        # Ctrl+Backspace
 bindkey -M menuselect '?' history-incremental-search-forward
 bindkey -M menuselect '/' history-incremental-search-backward
-
-alias ls='ls -G'
 
 # ============================================================
 #  AUTOLOADED FUNCTIONS
@@ -226,7 +220,6 @@ alias ....='cd ../../..'
 
 # --- Files & directories ---
 alias f='open . -a Finder'
-alias m='open . -a Marta'
 alias tree="tree -a -I 'node_modules'"
 alias del='trash'                           # move to trash instead of deleting
 
@@ -240,8 +233,6 @@ alias code='code -n'                        # always a new window
 alias lg='lazygit'
 alias ghw='gh repo view --web'
 alias venv='source .venv/bin/activate'
-alias jqq='~/.jqq/jqq.rb'
-alias article='inspekt extract article --no-frontmatter --exclude-images --flatten | glow'
 
 # --- System & macOS ---
 alias sc='shortcuts'                        # macOS Shortcuts CLI
@@ -254,7 +245,6 @@ alias httpd='sudo micro /etc/apache2/httpd.conf'
 
 # --- Applications ---
 alias mc='mc --nosubshell'
-alias hue='hueadm'
 alias ai='llm'
 alias html2md='html2markdown'
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
@@ -402,16 +392,6 @@ weather()   { curl "wttr.in/$1" }
 g()         { open "http://www.google.com/search?q=$1" }
 urlencode() { python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))' "$1" }
 
-lmgtfy() {
-    local query=$1
-    [ -z "$query" ] && read query
-    echo "lEt ME goOgLE THAT fOr you…"
-    open -a "Arc" "$(ddgr --np -n 1 --json "$query" | jq '.[0] .url' -r)"
-}
-
-# Current selection from inspekt, as markdown
-s() { curl -s http://inspekt:8000/api/selection/markdown | jq ".result.markdown" -r }
-
 # Write VS Code project settings with sensible exclusions
 vsp() {
     mkdir -p .vscode
@@ -426,9 +406,6 @@ trackdotfile() {
         && ln -s "$HOME/repos/dotfiles/$1" "$HOME/$1" \
         && echo "$1 is now tracked in the dotfiles repo."
 }
-
-# Compile universal binaries
-shc-intel() { arch -x86_64 /usr/local/bin/shc "$@" }
 
 # --- Remote machines ---
 # Both rely on host aliases defined in ~/.ssh/config, which is not tracked
@@ -449,7 +426,7 @@ suyabai() {
 yabai-rehash() {
     local sha
     sha=$(shasum -a 256 "$(command -v yabai)" | awk '{print $1}')
-    sudo sed -i.bak "s|sha256:[a-f0-9]*|sha256:$sha|" /etc/sudoers.d/yabai \
+    sudo sed -i '' "s|sha256:[a-f0-9]*|sha256:$sha|" /etc/sudoers.d/yabai \
         && sudo visudo -c -f /etc/sudoers.d/yabai \
         && sudo -n yabai --load-sa \
         && echo "yabai sudoers updated: $sha"
@@ -467,41 +444,6 @@ brew() {
     fi
     return $rc
 }
-
-# ============================================================
-#  TOOL COMPLETIONS
-# ============================================================
-_inspekt_completion() {
-    local -a completions
-    local -a completions_with_descriptions
-    local -a response
-    (( ! $+commands[inspekt] )) && return 1
-
-    response=("${(@f)$(env COMP_WORDS="${words[*]}" COMP_CWORD=$((CURRENT-1)) _INSPEKT_COMPLETE=zsh_complete inspekt)}")
-
-    for type key descr in ${response}; do
-        if [[ "$type" == "plain" ]]; then
-            if [[ "$descr" == "_" ]]; then
-                completions+=("$key")
-            else
-                completions_with_descriptions+=("$key":"$descr")
-            fi
-        elif [[ "$type" == "dir" ]]; then
-            _path_files -/
-        elif [[ "$type" == "file" ]]; then
-            _path_files -f
-        fi
-    done
-
-    [ -n "$completions_with_descriptions" ] && _describe -V unsorted completions_with_descriptions -U
-    [ -n "$completions" ] && compadd -U -V unsorted -a completions
-}
-
-if [[ $zsh_eval_context[-1] == loadautofunc ]]; then
-    _inspekt_completion "$@"
-else
-    compdef _inspekt_completion inspekt
-fi
 
 # ============================================================
 #  COLOURS
