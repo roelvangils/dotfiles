@@ -37,6 +37,15 @@ config/karabiner/automatic_backups/
 # Build artifact; set-wallpapers.sh rebuilds it from setwall.swift on demand
 config/yabai/bin/
 
+# Runtime state, not configuration
+*.log
+config/sunshine/sunshine_state.json
+config/zed/prompts/
+config/yarn/global/node_modules/
+config/notion/cache.json
+config/configstore/update-notifier-*.json
+config/fontforge/FontsOpenAtLastQuit
+
 # macOS
 .DS_Store
 
