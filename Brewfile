@@ -24,6 +24,7 @@ brew "mise"                 # node, python, ruby version manager
 brew "direnv"               # per-directory environment variables
 brew "zoxide"               # smarter cd
 brew "fzf"                  # fuzzy finder
+brew "atuin"                # ctrl-R with context: directory, exit code, duration
 brew "coreutils"            # GNU utilities, available as g-prefixed commands
 
 # ============================================================
@@ -31,6 +32,7 @@ brew "coreutils"            # GNU utilities, available as g-prefixed commands
 # ============================================================
 brew "eza"                  # ls replacement, used by the dir function
 brew "bat"                  # cat with syntax highlighting
+brew "fd"                   # find replacement; also what FZF_DEFAULT_COMMAND uses
 brew "tree"
 brew "trash"                # used by the del alias
 brew "yazi"                 # file manager, used by the y function
@@ -43,6 +45,8 @@ brew "macchina"             # system info in Rust, TOML-themable
 #  DATA & TEXT
 # ============================================================
 brew "jq"
+brew "yq"                   # jq's grip, but for YAML, TOML and plists
+brew "jless"                # pager for JSON: fold, search, navigate
 brew "glow"                 # markdown in the terminal
 brew "html2markdown"        # used by the html2md alias
 brew "pandoc"
@@ -54,6 +58,10 @@ brew "gum"                  # pretty shell scripts
 brew "git"                  # newer than Apple's; .zshenv puts it first on PATH
 brew "gh"
 brew "lazygit"              # used by the lg alias
+brew "git-delta"            # syntax-highlighted git diffs; set as core.pager
+brew "just"                 # task runner: a justfile per repo
+brew "watchexec"            # rerun a command when files change
+brew "hyperfine"            # benchmark a command over N runs
 brew "node"
 brew "bun"
 brew "deno"
@@ -89,6 +97,11 @@ brew "switchaudio-osx"      # used by the audio alias
 brew "macrowhisper"
 brew "merve"
 brew "nbytes"
+brew "duti"                 # set the default app per file type, from the CLI
+brew "pngpaste"             # write the clipboard image to a file
+brew "croc"                 # send files between machines over a code phrase
+# terminal-notifier is deliberately absent: unmaintained, and its
+# notifications no longer behave on current macOS.
 
 # ============================================================
 #  WINDOW MANAGEMENT
@@ -142,15 +155,18 @@ cask "gcloud-cli"
 # allow under Privacy & Security.
 cask "syntax-highlight"     # source code with syntax highlighting, ~180 languages
 cask "qlmarkdown"           # Markdown incl. front matter, tables, Mermaid
+cask "quicklook-video"      # mkv/avi/flv: thumbnails and preview in Finder
+cask "suspicious-package"   # look inside a .pkg, incl. the scripts it would run
+# mediainfo is the GUI app only — it ships no Quick Look extension, despite
+# what its description suggests. Kept for the app itself, not for Quick Look.
+cask "mediainfo"            # codecs, bitrate, audio and subtitle tracks
 
 # ============================================================
 #  OPTIONAL — uncomment what you want back
 # ============================================================
 
 # --- Shell & files ---
-# brew "fd"                 # faster find
 # brew "ripgrep"            # faster grep
-# brew "gum"                # pretty shell scripts
 # brew "procs"              # ps replacement
 # brew "bottom"             # system monitor
 # brew "htop"
@@ -165,7 +181,6 @@ cask "qlmarkdown"           # Markdown incl. front matter, tables, Mermaid
 # brew "yank"
 
 # --- Text & data ---
-# brew "yq"
 # brew "hq"                 # jq for HTML
 # brew "htmlq"
 # brew "jtbl"               # JSON to tables
@@ -181,7 +196,6 @@ cask "qlmarkdown"           # Markdown incl. front matter, tables, Mermaid
 # brew "ocrmypdf"
 # brew "gifsicle"
 # brew "oxipng"
-# brew "pngpaste"
 # brew "potrace"
 # brew "chafa"
 # brew "zbar"
@@ -213,7 +227,6 @@ cask "qlmarkdown"           # Markdown incl. front matter, tables, Mermaid
 # brew "watchman"
 # brew "entr"               # run a command when files change
 # brew "fswatch"
-# brew "hyperfine"          # benchmarking
 # brew "git-filter-repo"
 # brew "overmind"
 # brew "posting"            # API client in the terminal
