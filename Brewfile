@@ -10,8 +10,10 @@
 # Optional packages are commented out. Uncomment what you want and rerun
 # brew bundle — it only installs what is missing.
 
-tap "asmvik/formulae"
+tap "asmvik/formulae"       # skhd (original tap orphaned); trusted via `brew trust`
 tap "darrylmorley/whatcable"
+tap "danielgatis/imgcat"    # imgcat, used by the i alias
+tap "homebrew-ffmpeg/ffmpeg" # ffmpeg with extra codecs; shadows homebrew/core
 
 # ============================================================
 #  SHELL
@@ -21,13 +23,13 @@ brew "antidote"             # zsh plugin manager
 brew "mise"                 # node, python, ruby version manager
 brew "direnv"               # per-directory environment variables
 brew "zoxide"               # smarter cd
-brew "fzf"                  # fuzzy finder, also powers the fzf-tab plugin
+brew "fzf"                  # fuzzy finder
 brew "coreutils"            # GNU utilities, used via the gnubin path
 
 # ============================================================
 #  FILES & SEARCH
 # ============================================================
-brew "eza"                  # ls replacement, used by the dira alias
+brew "eza"                  # ls replacement, used by the dir function
 brew "bat"                  # cat with syntax highlighting
 brew "tree"
 brew "trash"                # used by the del alias
@@ -41,6 +43,8 @@ brew "micro"                # editor used by the hosts/vhosts aliases
 brew "jq"
 brew "glow"                 # markdown in the terminal, used by the article alias
 brew "html2markdown"        # used by the html2md alias
+brew "pandoc"
+brew "gum"                  # pretty shell scripts
 
 # ============================================================
 #  DEVELOPMENT
@@ -56,11 +60,22 @@ brew "oxlint"
 brew "perl"
 brew "shc"                  # shell script compiler, used by shc-intel
 brew "openjdk@21"           # JAVA_HOME in .zshrc points here
+brew "php"
+brew "uv"                   # fast Python package installer
+brew "cmake"
+brew "gnupg"
+brew "curl"                 # newer than the system one; .zshrc aliases to it
 
 # ============================================================
 #  MEDIA
 # ============================================================
-brew "ffmpeg"
+brew "homebrew-ffmpeg/ffmpeg/ffmpeg"
+brew "mpv"
+brew "sox"
+brew "yt-dlp"
+brew "imagemagick"
+brew "tesseract"            # OCR
+brew "tesseract-lang"
 
 # ============================================================
 #  SYSTEM & MONITORING
@@ -68,14 +83,22 @@ brew "ffmpeg"
 brew "btop"
 brew "bluetoothconnector"   # used by the bt alias
 brew "z"
+brew "switchaudio-osx"      # used by the audio alias
+brew "macrowhisper"
+brew "merve"
+brew "nbytes"
+
+# ============================================================
+#  WINDOW MANAGEMENT
+# ============================================================
+# yabai is installed manually (not brew-managed); its binary hash is
+# pinned in /etc/sudoers.d/yabai — see suyabai/yabai-rehash in .zshrc.
+brew "skhd"                 # hotkey daemon; formula lives in asmvik/formulae
 
 # ============================================================
 #  AI
 # ============================================================
-# mods is deprecated: charmbracelet archived the repo in March 2026.
-# It still installs, with a warning. The ai alias and tolkie both depend on
-# it, so it stays until those switch to fabric-ai, llm or aichat.
-brew "mods"
+brew "llm"                  # replaced the archived mods; used by the ai alias
 brew "ddgr"                 # DuckDuckGo search, used by lmgtfy
 
 # ============================================================
@@ -96,6 +119,13 @@ cask "mos"
 cask "whichspace"
 cask "whatcable"
 cask "latest"
+cask "keyboard-maestro"
+cask "mist"                 # download macOS installers
+cask "pika"                 # colour picker
+cask "ant"
+cask "portkiller"
+cask "startupfolder"
+cask "gcloud-cli"
 
 # ============================================================
 #  OPTIONAL — uncomment what you want back
@@ -124,7 +154,6 @@ cask "latest"
 # brew "hq"                 # jq for HTML
 # brew "htmlq"
 # brew "jtbl"               # JSON to tables
-# brew "pandoc"
 # brew "multimarkdown"
 # brew "html2text"
 # brew "prettier"
@@ -132,9 +161,7 @@ cask "latest"
 # brew "lnav"               # log viewer
 
 # --- Media ---
-# brew "ffmpeg-full"        # .zshrc puts this ahead of plain ffmpeg on PATH
-# brew "mpv"
-# brew "sox"
+# brew "ffmpeg-full"        # drop-in ffmpeg with more codecs
 # brew "exiftool"
 # brew "ocrmypdf"
 # brew "gifsicle"
@@ -167,10 +194,7 @@ cask "latest"
 # --- Development ---
 # brew "go"
 # brew "zig"
-# brew "php"
-# brew "uv"                 # fast Python package installer
 # brew "pipx"
-# brew "cmake"
 # brew "watchman"
 # brew "entr"               # run a command when files change
 # brew "fswatch"
@@ -190,14 +214,12 @@ cask "latest"
 # brew "fabric-ai"
 
 # --- macOS utilities ---
-# brew "mas"                # Mac App Store CLI
 # brew "tag"                # file tags
 # brew "cliclick"           # emulate mouse and keyboard
 # brew "displayplacer"      # arrange displays
 # brew "m1ddc"              # external monitor brightness, built for Apple Silicon
 # brew "ddcctl"             # older alternative to m1ddc, unmaintained since 2022
 # brew "blueutil"
-# brew "switchaudio-osx"    # used by the audio alias
 # brew "terminal-notifier"
 # brew "sleepwatcher"
 # brew "wallpaper"
@@ -209,12 +231,13 @@ cask "latest"
 # brew "neovim"
 
 # --- Toys ---
-# brew "cowsay"
+brew "cowsay"               # delivers the startup joke in .zshrc
+brew "figlet"
+brew "fortune"
+brew "lolcat"
+brew "imgcat"               # inline images in the terminal, used by the i alias
 # brew "cmatrix"
-# brew "fortune"
-# brew "lolcat"
 # brew "sl"
-# brew "figlet"
 # brew "yetris"
 # brew "mdp"                # markdown presentations
 # brew "vhs"                # record terminal sessions
@@ -242,6 +265,8 @@ cask "latest"
 #   nvm, pyenv, rbenv, python@3.11  -> mise handles language versions
 #   thefuck                         -> slow, removed from .zshrc
 #   zsh-autosuggestions, zsh-syntax-highlighting -> antidote provides these
+#     (brew copies are installed but never sourced; kept, not declared)
+#   yabai                           -> installed manually, see WINDOW MANAGEMENT
 
 # Folio: PDF page counts and text extraction
 brew "poppler"

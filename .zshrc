@@ -4,8 +4,16 @@
 # Every line that depends on an external tool is guarded, so a machine
 # without that tool starts without errors.
 
-# Let's start with a joke
-curl -s https://icanhazdadjoke.com/ | cowsay
+# Let's start with a joke — fetched in the background so the prompt is
+# never blocked (a synchronous curl here cost ~190 ms per shell, and hung
+# the prompt entirely on captive portals or flaky networks).
+if command -v cowsay >/dev/null; then
+    () {
+        local joke
+        joke=$(curl -s --max-time 1 https://icanhazdadjoke.com/) \
+            && [ -n "$joke" ] && cowsay "$joke"
+    } &!
+fi
 
 # ============================================================
 #  PLUGINS
@@ -18,6 +26,7 @@ if [ -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]; then
     # Rebuild the bundle only when the list changes.
     if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
         antidote bundle <"${zsh_plugins}.txt" >|"${zsh_plugins}.zsh"
+        zcompile "${zsh_plugins}.zsh"
     fi
     source "${zsh_plugins}.zsh"
     unset zsh_plugins
@@ -65,10 +74,17 @@ fi
 # ============================================================
 #  COMPLETIONS
 # ============================================================
-# Full rebuild once a day, cached for the rest.
+# Full rebuild once a day, cached for the rest. compinit only rewrites
+# the dump when fpath actually changed, so touch it ourselves — otherwise
+# the mtime never advances and the slow branch runs on every startup.
 autoload -Uz compinit
 if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
     compinit
+    touch ~/.zcompdump
+    # Bytecode-compile the dump; zsh picks up the .zwc automatically.
+    # (Unconditional: we're already in the once-a-day branch, and -nt is
+    # false in zsh when the .zwc doesn't exist yet.)
+    zcompile ~/.zcompdump
 else
     compinit -C
 fi
@@ -239,7 +255,7 @@ alias httpd='sudo micro /etc/apache2/httpd.conf'
 # --- Applications ---
 alias mc='mc --nosubshell'
 alias hue='hueadm'
-alias ai='mods'
+alias ai='llm'
 alias html2md='html2markdown'
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chrome-debug='killall "Google Chrome" 2>/dev/null || true; /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --remote-debugging-address=127.0.0.1 --user-data-dir="$HOME/.chrome-debug-profile" >/dev/null 2>&1 &'
