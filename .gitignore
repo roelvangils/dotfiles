@@ -34,6 +34,9 @@
 # Karabiner writes timestamped auto-backups here on every change
 config/karabiner/automatic_backups/
 
+# Build artifact; set-wallpapers.sh rebuilds it from setwall.swift on demand
+config/yabai/bin/
+
 # macOS
 .DS_Store
 

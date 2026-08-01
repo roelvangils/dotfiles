@@ -65,19 +65,34 @@ yabai -m rule --add app="^Keychain Access$"                     manage=off
 yabai -m rule --add app="^Raycast$"                             manage=off
 yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" manage=off
 
-# ── space labels ──────────────────────────────────────────────────────────
-# What each space is for (see roelOS/content/spaces.md). Labels are also usable
-# as identifiers in commands, e.g. yabai -m window --space "Coding & Automation".
-# The window-mode HUD shows the current space's label in its top-right corner.
-# Labelling a space that doesn't exist just errors, so this is quiet about it.
-yabai -m space 1 --label "Sandbox"                 2>/dev/null
-yabai -m space 2 --label "Browsing & Research"     2>/dev/null
-yabai -m space 3 --label "Writing & Deep Work"     2>/dev/null
-yabai -m space 4 --label "Mail, Calendar & Tasks"  2>/dev/null
-yabai -m space 5 --label "Slack, Notion & Harvest" 2>/dev/null
-yabai -m space 6 --label "Chat & Personal Comms"   2>/dev/null
-yabai -m space 7 --label "Coding & Automation"     2>/dev/null
-yabai -m space 8 --label "Music & Movies"          2>/dev/null
-yabai -m space 9 --label "Monitoring & Dashboards" 2>/dev/null
+# ── spaces: force exactly 9, labelled ─────────────────────────────────────
+# What each space is for lives in reset-spaces.sh (see roelOS/content/spaces.md)
+# — EDIT THE LABELS THERE, not here. Labels double as identifiers in commands,
+# e.g. yabai -m window --space "Coding & Automation", and the window-mode HUD
+# shows the current one in its top-right corner.
+#
+# The script creates any missing spaces and destroys the surplus, then labels
+# all 9 by position on display 1. Other displays are untouched.
+#
+# It converges rather than wiping: yabai cannot destroy a display's last space,
+# so "destroy everything, then make 9" is not expressible. Consequence worth
+# knowing — when the count is already 9 this is a ~60ms no-op, so restarting
+# yabai mid-session does NOT shuffle your desktop. When it does have to destroy
+# a space, that space's windows migrate to a neighbour rather than closing.
+#
+# Runs in the FOREGROUND deliberately. Backgrounding it would shave ~1.5s off a
+# cold start (space creation costs ~150ms each through the SA), but it would
+# also race space --create against yabai's own startup for no real benefit —
+# this is the last thing in the file, so nothing is waiting on it anyway.
+"$HOME/.config/yabai/reset-spaces.sh" 1
+
+# Exit 10 means it actually created or destroyed spaces. Only then do wallpapers
+# need re-applying, because a new space starts on the macOS default — otherwise
+# the per-space wallpapers already persist in com.apple.wallpaper's store.
+#
+# Gating on this matters: set-wallpapers.sh has to VISIT all nine spaces (there
+# is no API to dress a space you aren't on), so running it unconditionally would
+# make every yabai restart flick through your desktops for a few seconds.
+[ $? -eq 10 ] && "$HOME/.config/yabai/set-wallpapers.sh" 1
 
 echo "yabai configuration loaded.."
