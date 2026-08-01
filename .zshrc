@@ -155,6 +155,21 @@ setopt SHARE_HISTORY EXTENDED_HISTORY
 #  PATH
 # ============================================================
 # The bulk of PATH lives in .zshenv. Only conditional entries here.
+
+# In login shells /etc/zprofile runs path_helper *after* .zshenv, which
+# shuffles /usr/bin back in front of Homebrew. Re-assert our ordering
+# (typeset -U in .zshenv drops the duplicates that end up further back).
+path=(
+    "$HOME/scripts"
+    "$HOME/.local/bin"
+    "/opt/homebrew/opt/sqlite/bin"
+    "/opt/homebrew/opt/perl/bin"
+    "/opt/homebrew/opt/git/bin"
+    "/opt/homebrew/bin"
+    "/opt/homebrew/sbin"
+    $path
+)
+
 if [ -d "/opt/homebrew/opt/openjdk@21" ]; then
     export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
     export PATH="$JAVA_HOME/bin:$PATH"
