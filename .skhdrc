@@ -133,14 +133,14 @@ window < s : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("sticky")' > /dev/nul
 # Always on top: no native toggle in v7 (`topmost` was replaced by the
 # `--sub-layer` setter), so this script reads the state and flips it.
 # Beeps if there's no focused window. Chip flipped first, same as sticky.
-window < t : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; /Users/roelvangils/.config/yabai/toggle-topmost.sh   #= always on top
+window < t : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; ~/.config/yabai/toggle-topmost.sh   #= always on top
 
 # Toggle tiling for the CURRENT space only (bsp <-> float). Other spaces keep
 # whatever they were. Resets to the ~/.yabairc default when yabai restarts.
 # The script sends the mode-leaving escape ITSELF, but only when restoring to
 # float -- entering bsp keeps window mode (and the HUD) up so you can immediately
 # tune the new layout with swap/rotate/balance.
-window < b : /Users/roelvangils/.config/yabai/toggle-layout.sh   #= bsp / float
+window < b : ~/.config/yabai/toggle-layout.sh   #= bsp / float
 
 # PIP: scales the window to fill the display, honouring your padding
 # (window_manager.c:2410 -> scripting_addition_scale_window). Note it SCALES
@@ -169,7 +169,7 @@ window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/s
 # shift - p once to claim the "pad" label, then p from anywhere to show/hide
 # it. Press shift - p again on that window to release the label.
 window < p         : /opt/homebrew/bin/yabai -m window --toggle pad; /opt/homebrew/bin/skhd -k "escape"   #= show / hide
-window < shift - p : /Users/roelvangils/.config/yabai/toggle-scratchpad.sh pad; /opt/homebrew/bin/skhd -k "escape"   #= claim / release
+window < shift - p : ~/.config/yabai/toggle-scratchpad.sh pad; /opt/homebrew/bin/skhd -k "escape"   #= claim / release
 
 # If a scratchpad ever gets lost off-screen, this forcefully brings every
 # scratchpad window back to the front. Grouped with the other `p` bindings;
@@ -194,25 +194,25 @@ window < m ; move   #= move to space (⇧ stay)
 # file). Keep the label in sync with the Hammerspoon behaviour.
 window < tab : true   #= next space (⇧ prev)
 # top row -> kVK_ANSI_1..9 (5 and 6 are swapped; 7/8/9 jump around)
-window < 0x12 : /Users/roelvangils/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-window < 0x13 : /Users/roelvangils/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-window < 0x14 : /Users/roelvangils/.config/yabai/focus-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-window < 0x15 : /Users/roelvangils/.config/yabai/focus-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-window < 0x17 : /Users/roelvangils/.config/yabai/focus-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-window < 0x16 : /Users/roelvangils/.config/yabai/focus-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-window < 0x1A : /Users/roelvangils/.config/yabai/focus-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-window < 0x1C : /Users/roelvangils/.config/yabai/focus-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-window < 0x19 : /Users/roelvangils/.config/yabai/focus-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
+window < 0x12 : ~/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
+window < 0x13 : ~/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
+window < 0x14 : ~/.config/yabai/focus-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
+window < 0x15 : ~/.config/yabai/focus-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
+window < 0x17 : ~/.config/yabai/focus-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
+window < 0x16 : ~/.config/yabai/focus-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
+window < 0x1A : ~/.config/yabai/focus-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
+window < 0x1C : ~/.config/yabai/focus-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
+window < 0x19 : ~/.config/yabai/focus-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
 # numpad -> kVK_ANSI_Keypad1..9 (0x5A skipped: that is F20, not a keypad key)
-window < 0x53 : /Users/roelvangils/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-window < 0x54 : /Users/roelvangils/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-window < 0x55 : /Users/roelvangils/.config/yabai/focus-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-window < 0x56 : /Users/roelvangils/.config/yabai/focus-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-window < 0x57 : /Users/roelvangils/.config/yabai/focus-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-window < 0x58 : /Users/roelvangils/.config/yabai/focus-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-window < 0x59 : /Users/roelvangils/.config/yabai/focus-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-window < 0x5B : /Users/roelvangils/.config/yabai/focus-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-window < 0x5C : /Users/roelvangils/.config/yabai/focus-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
+window < 0x53 : ~/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
+window < 0x54 : ~/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
+window < 0x55 : ~/.config/yabai/focus-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
+window < 0x56 : ~/.config/yabai/focus-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
+window < 0x57 : ~/.config/yabai/focus-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
+window < 0x58 : ~/.config/yabai/focus-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
+window < 0x59 : ~/.config/yabai/focus-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
+window < 0x5B : ~/.config/yabai/focus-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
+window < 0x5C : ~/.config/yabai/focus-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
 
 # ══════════════════════════════════════════════════════════════════════════
 #  MOVE MODE — reached with `m` from window mode
@@ -235,44 +235,44 @@ move < fn - 0x50    ; default
 move < hyper - 0x50 ; default
 
 # ── move & FOLLOW: bare digit ─────────────────────────────────────────────
-move < 0x12 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x13 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x14 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x15 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x17 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x16 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x1A : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x1C : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x19 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x53 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x54 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x55 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x56 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x57 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x58 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x59 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x5B : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x5C : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x12 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x13 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x14 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x15 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x17 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x16 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x1A : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x1C : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x19 : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x53 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x54 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x55 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x56 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x57 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x58 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x59 : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x5B : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x5C : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
 
 # ── move & STAY: shift + digit ────────────────────────────────────────────
-move < shift - 0x12 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x13 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x14 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x15 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x17 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x16 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x1A : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x1C : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x19 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x53 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x54 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x55 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x56 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x57 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x58 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x59 : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x5B : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x5C : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x12 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x13 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x14 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x15 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x17 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x16 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x1A : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x1C : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x19 : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x53 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x54 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x55 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x56 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x57 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x58 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x59 : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x5B : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x5C : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
 
 # ══════════════════════════════════════════════════════════════════════════
 #  SPACES — always live, outside any mode
@@ -302,15 +302,15 @@ ctrl - right  : /opt/homebrew/bin/yabai -m space --focus next 2>/dev/null || /op
 #
 # These go through focus-space.sh, which beeps (system alert sound) when the
 # target space doesn't exist instead of failing silently.
-ctrl - 0x12   : /Users/roelvangils/.config/yabai/focus-space.sh 1   # & (kVK_ANSI_1)
-ctrl - 0x13   : /Users/roelvangils/.config/yabai/focus-space.sh 2   # é (kVK_ANSI_2)
-ctrl - 0x14   : /Users/roelvangils/.config/yabai/focus-space.sh 3   # " (kVK_ANSI_3)
-ctrl - 0x15   : /Users/roelvangils/.config/yabai/focus-space.sh 4   # ' (kVK_ANSI_4)
-ctrl - 0x17   : /Users/roelvangils/.config/yabai/focus-space.sh 5   # ( (kVK_ANSI_5)
-ctrl - 0x16   : /Users/roelvangils/.config/yabai/focus-space.sh 6   # § (kVK_ANSI_6)
-ctrl - 0x1A   : /Users/roelvangils/.config/yabai/focus-space.sh 7   # è (kVK_ANSI_7)
-ctrl - 0x1C   : /Users/roelvangils/.config/yabai/focus-space.sh 8   # ! (kVK_ANSI_8)
-ctrl - 0x19   : /Users/roelvangils/.config/yabai/focus-space.sh 9   # ç (kVK_ANSI_9)
+ctrl - 0x12   : ~/.config/yabai/focus-space.sh 1   # & (kVK_ANSI_1)
+ctrl - 0x13   : ~/.config/yabai/focus-space.sh 2   # é (kVK_ANSI_2)
+ctrl - 0x14   : ~/.config/yabai/focus-space.sh 3   # " (kVK_ANSI_3)
+ctrl - 0x15   : ~/.config/yabai/focus-space.sh 4   # ' (kVK_ANSI_4)
+ctrl - 0x17   : ~/.config/yabai/focus-space.sh 5   # ( (kVK_ANSI_5)
+ctrl - 0x16   : ~/.config/yabai/focus-space.sh 6   # § (kVK_ANSI_6)
+ctrl - 0x1A   : ~/.config/yabai/focus-space.sh 7   # è (kVK_ANSI_7)
+ctrl - 0x1C   : ~/.config/yabai/focus-space.sh 8   # ! (kVK_ANSI_8)
+ctrl - 0x19   : ~/.config/yabai/focus-space.sh 9   # ç (kVK_ANSI_9)
 
 # à = end of the physical row -> LAST space, mirroring Cmd+9 in browsers
 # (which jumps to the last tab, not tab 9). Tracks your space count as it
@@ -327,15 +327,15 @@ ctrl - 0x1D   : /opt/homebrew/bin/yabai -m space --focus last   # à (kVK_ANSI_0
 # than comparing it. Arrow keys carry an intrinsic flag too and `ctrl - left`
 # works fine, which is the reason to expect masking. If these do nothing, the
 # fallback is a Karabiner rule remapping the keypad to keys skhd can match.
-ctrl - 0x53   : /Users/roelvangils/.config/yabai/focus-space.sh 1   # keypad 1
-ctrl - 0x54   : /Users/roelvangils/.config/yabai/focus-space.sh 2   # keypad 2
-ctrl - 0x55   : /Users/roelvangils/.config/yabai/focus-space.sh 3   # keypad 3
-ctrl - 0x56   : /Users/roelvangils/.config/yabai/focus-space.sh 4   # keypad 4
-ctrl - 0x57   : /Users/roelvangils/.config/yabai/focus-space.sh 5   # keypad 5
-ctrl - 0x58   : /Users/roelvangils/.config/yabai/focus-space.sh 6   # keypad 6
-ctrl - 0x59   : /Users/roelvangils/.config/yabai/focus-space.sh 7   # keypad 7
-ctrl - 0x5B   : /Users/roelvangils/.config/yabai/focus-space.sh 8   # keypad 8
-ctrl - 0x5C   : /Users/roelvangils/.config/yabai/focus-space.sh 9   # keypad 9
+ctrl - 0x53   : ~/.config/yabai/focus-space.sh 1   # keypad 1
+ctrl - 0x54   : ~/.config/yabai/focus-space.sh 2   # keypad 2
+ctrl - 0x55   : ~/.config/yabai/focus-space.sh 3   # keypad 3
+ctrl - 0x56   : ~/.config/yabai/focus-space.sh 4   # keypad 4
+ctrl - 0x57   : ~/.config/yabai/focus-space.sh 5   # keypad 5
+ctrl - 0x58   : ~/.config/yabai/focus-space.sh 6   # keypad 6
+ctrl - 0x59   : ~/.config/yabai/focus-space.sh 7   # keypad 7
+ctrl - 0x5B   : ~/.config/yabai/focus-space.sh 8   # keypad 8
+ctrl - 0x5C   : ~/.config/yabai/focus-space.sh 9   # keypad 9
 ctrl - 0x52   : /opt/homebrew/bin/yabai -m space --focus last       # keypad 0 -> last
 
 # ── back to the previous space (toggle) ───────────────────────────────────
@@ -355,33 +355,33 @@ ctrl - tab    : /opt/homebrew/bin/yabai -m space --focus recent
 # The script resolves next/prev to an absolute index BEFORE moving. Chaining
 # `window --space next && space --focus next` would land you one space too
 # far, because "next" gets re-evaluated after the window has already moved.
-ctrl + cmd - left  : /Users/roelvangils/.config/yabai/move-window-to-space.sh prev follow
-ctrl + cmd - right : /Users/roelvangils/.config/yabai/move-window-to-space.sh next follow
+ctrl + cmd - left  : ~/.config/yabai/move-window-to-space.sh prev follow
+ctrl + cmd - right : ~/.config/yabai/move-window-to-space.sh next follow
 
-ctrl + cmd - 0x12  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow   # &
-ctrl + cmd - 0x13  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow   # é
-ctrl + cmd - 0x14  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow   # "
-ctrl + cmd - 0x15  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow   # '
-ctrl + cmd - 0x17  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow   # (
-ctrl + cmd - 0x16  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow   # §
-ctrl + cmd - 0x1A  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow   # è
-ctrl + cmd - 0x1C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow   # !
-ctrl + cmd - 0x19  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow   # ç
+ctrl + cmd - 0x12  : ~/.config/yabai/move-window-to-space.sh 1 follow   # &
+ctrl + cmd - 0x13  : ~/.config/yabai/move-window-to-space.sh 2 follow   # é
+ctrl + cmd - 0x14  : ~/.config/yabai/move-window-to-space.sh 3 follow   # "
+ctrl + cmd - 0x15  : ~/.config/yabai/move-window-to-space.sh 4 follow   # '
+ctrl + cmd - 0x17  : ~/.config/yabai/move-window-to-space.sh 5 follow   # (
+ctrl + cmd - 0x16  : ~/.config/yabai/move-window-to-space.sh 6 follow   # §
+ctrl + cmd - 0x1A  : ~/.config/yabai/move-window-to-space.sh 7 follow   # è
+ctrl + cmd - 0x1C  : ~/.config/yabai/move-window-to-space.sh 8 follow   # !
+ctrl + cmd - 0x19  : ~/.config/yabai/move-window-to-space.sh 9 follow   # ç
 
 # à = last space, mirroring `ctrl - à`
-ctrl + cmd - 0x1D  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last follow
+ctrl + cmd - 0x1D  : ~/.config/yabai/move-window-to-space.sh last follow
 
 # ── the same, on the NUMPAD ───────────────────────────────────────────────
-ctrl + cmd - 0x53  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1 follow
-ctrl + cmd - 0x54  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2 follow
-ctrl + cmd - 0x55  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3 follow
-ctrl + cmd - 0x56  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4 follow
-ctrl + cmd - 0x57  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5 follow
-ctrl + cmd - 0x58  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6 follow
-ctrl + cmd - 0x59  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7 follow
-ctrl + cmd - 0x5B  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8 follow
-ctrl + cmd - 0x5C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9 follow
-ctrl + cmd - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last follow
+ctrl + cmd - 0x53  : ~/.config/yabai/move-window-to-space.sh 1 follow
+ctrl + cmd - 0x54  : ~/.config/yabai/move-window-to-space.sh 2 follow
+ctrl + cmd - 0x55  : ~/.config/yabai/move-window-to-space.sh 3 follow
+ctrl + cmd - 0x56  : ~/.config/yabai/move-window-to-space.sh 4 follow
+ctrl + cmd - 0x57  : ~/.config/yabai/move-window-to-space.sh 5 follow
+ctrl + cmd - 0x58  : ~/.config/yabai/move-window-to-space.sh 6 follow
+ctrl + cmd - 0x59  : ~/.config/yabai/move-window-to-space.sh 7 follow
+ctrl + cmd - 0x5B  : ~/.config/yabai/move-window-to-space.sh 8 follow
+ctrl + cmd - 0x5C  : ~/.config/yabai/move-window-to-space.sh 9 follow
+ctrl + cmd - 0x52  : ~/.config/yabai/move-window-to-space.sh last follow
 
 # ══════════════════════════════════════════════════════════════════════════
 #  SEND THE WINDOW AWAY, STAY HERE — ctrl + alt
@@ -405,31 +405,31 @@ ctrl + cmd - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh la
 # Two ways to avoid it if it bites: press ctrl and option more than 60ms
 # apart (the chord needs them simultaneous), or raise
 # basic.simultaneous_threshold_milliseconds' opposite — lower it further.
-ctrl + alt - left  : /Users/roelvangils/.config/yabai/move-window-to-space.sh prev
-ctrl + alt - right : /Users/roelvangils/.config/yabai/move-window-to-space.sh next
+ctrl + alt - left  : ~/.config/yabai/move-window-to-space.sh prev
+ctrl + alt - right : ~/.config/yabai/move-window-to-space.sh next
 
-ctrl + alt - 0x12  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1   # &
-ctrl + alt - 0x13  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2   # é
-ctrl + alt - 0x14  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3   # "
-ctrl + alt - 0x15  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4   # '
-ctrl + alt - 0x17  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5   # (
-ctrl + alt - 0x16  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6   # §
-ctrl + alt - 0x1A  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7   # è
-ctrl + alt - 0x1C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8   # !
-ctrl + alt - 0x19  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9   # ç
-ctrl + alt - 0x1D  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last
+ctrl + alt - 0x12  : ~/.config/yabai/move-window-to-space.sh 1   # &
+ctrl + alt - 0x13  : ~/.config/yabai/move-window-to-space.sh 2   # é
+ctrl + alt - 0x14  : ~/.config/yabai/move-window-to-space.sh 3   # "
+ctrl + alt - 0x15  : ~/.config/yabai/move-window-to-space.sh 4   # '
+ctrl + alt - 0x17  : ~/.config/yabai/move-window-to-space.sh 5   # (
+ctrl + alt - 0x16  : ~/.config/yabai/move-window-to-space.sh 6   # §
+ctrl + alt - 0x1A  : ~/.config/yabai/move-window-to-space.sh 7   # è
+ctrl + alt - 0x1C  : ~/.config/yabai/move-window-to-space.sh 8   # !
+ctrl + alt - 0x19  : ~/.config/yabai/move-window-to-space.sh 9   # ç
+ctrl + alt - 0x1D  : ~/.config/yabai/move-window-to-space.sh last
 
 # ── the same, on the NUMPAD ───────────────────────────────────────────────
-ctrl + alt - 0x53  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 1
-ctrl + alt - 0x54  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 2
-ctrl + alt - 0x55  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 3
-ctrl + alt - 0x56  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 4
-ctrl + alt - 0x57  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 5
-ctrl + alt - 0x58  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 6
-ctrl + alt - 0x59  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 7
-ctrl + alt - 0x5B  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 8
-ctrl + alt - 0x5C  : /Users/roelvangils/.config/yabai/move-window-to-space.sh 9
-ctrl + alt - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh last
+ctrl + alt - 0x53  : ~/.config/yabai/move-window-to-space.sh 1
+ctrl + alt - 0x54  : ~/.config/yabai/move-window-to-space.sh 2
+ctrl + alt - 0x55  : ~/.config/yabai/move-window-to-space.sh 3
+ctrl + alt - 0x56  : ~/.config/yabai/move-window-to-space.sh 4
+ctrl + alt - 0x57  : ~/.config/yabai/move-window-to-space.sh 5
+ctrl + alt - 0x58  : ~/.config/yabai/move-window-to-space.sh 6
+ctrl + alt - 0x59  : ~/.config/yabai/move-window-to-space.sh 7
+ctrl + alt - 0x5B  : ~/.config/yabai/move-window-to-space.sh 8
+ctrl + alt - 0x5C  : ~/.config/yabai/move-window-to-space.sh 9
+ctrl + alt - 0x52  : ~/.config/yabai/move-window-to-space.sh last
 
 # ══════════════════════════════════════════════════════════════════════════
 #  PRAATPAAL
@@ -437,5 +437,5 @@ ctrl + alt - 0x52  : /Users/roelvangils/.config/yabai/move-window-to-space.sh la
 # F18 (kVK_F18 = 0x4F) focuses the Warp tab of the Claude session that last
 # spoke a praatpaal cue. Both variants because of the same fn-flag trap
 # documented at the f19 binding above.
-fn - 0x4F : /Users/roelvangils/repos/praatpaal/praatpaal goto
-0x4F      : /Users/roelvangils/repos/praatpaal/praatpaal goto
+fn - 0x4F : ~/repos/praatpaal/praatpaal goto
+0x4F      : ~/repos/praatpaal/praatpaal goto
