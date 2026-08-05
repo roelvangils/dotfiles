@@ -222,7 +222,12 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # --- Files & directories ---
-alias f='open . -a Finder'
+# Open a path in ForkLift. Going straight there skips the Finder window that
+# ~/.hammerspoon/forklift.lua would otherwise have to close again.
+fl() {
+    open -a ForkLift "${1:-.}"
+}
+alias f='fl'
 alias tree="tree -a -I 'node_modules'"
 alias del='trash'                           # move to trash instead of deleting
 
@@ -293,6 +298,34 @@ cdf() {
         POSIX path of f
     end tell')
     [ -n "$p" ] && cd "$p" || { echo "Could not read the Finder path"; return 1; }
+}
+
+# Jump to the directory shown in ForkLift's active tab. ForkLift reports a URL,
+# which is percent-encoded and may point at a remote connection (sftp://, smb://)
+# that has no local path to cd into.
+cdfl() {
+    # Not named `path`: in zsh that is tied to PATH, and localising it would
+    # empty PATH for the rest of this function.
+    local url dir
+    # The running check sits outside the tell block on purpose: addressing an app
+    # inside one would launch ForkLift just to answer a cd.
+    url=$(osascript -e 'if application "ForkLift" is not running then return ""
+    tell application "ForkLift"
+        if (count of windows) is 0 then return ""
+        return displayedUrl of activeTab 1 of window 1
+    end tell' 2>/dev/null)
+
+    if [[ -z "$url" ]]; then
+        echo "ForkLift is not running, or has no open window"
+        return 1
+    fi
+    if [[ "$url" != file://* ]]; then
+        echo "ForkLift is showing a remote location: ${url%%:*}"
+        return 1
+    fi
+
+    dir=$(printf '%s' "${url#file://}" | perl -pe 's/%([0-9A-Fa-f]{2})/chr(hex($1))/ge')
+    cd "$dir" || return 1
 }
 
 # Yazi, staying in the directory you left it in
@@ -465,3 +498,8 @@ export TRANSPARENT=0x00000000
 export BG0=0xff2c2e34
 export BG1=0xff363944
 export BG2=0xff414550
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/roelvangils/.lmstudio/bin"
+# End of LM Studio CLI section
+
