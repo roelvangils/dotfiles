@@ -71,14 +71,12 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" ma
 # e.g. yabai -m window --space "Coding & Automation", and the window-mode HUD
 # shows the current one in its top-right corner.
 #
-# The script creates any missing spaces and destroys the surplus, then labels
-# all 9 by position on display 1. Other displays are untouched.
-#
-# It converges rather than wiping: yabai cannot destroy a display's last space,
-# so "destroy everything, then make 9" is not expressible. Consequence worth
-# knowing — when the count is already 9 this is a ~60ms no-op, so restarting
-# yabai mid-session does NOT shuffle your desktop. When it does have to destroy
-# a space, that space's windows migrate to a neighbour rather than closing.
+# If the count is sane (8 or 9) the script only re-applies labels — a ~60ms
+# no-op, so restarting yabai mid-session does NOT shuffle your desktop. If the
+# count is messed up (< 8 or > 9) it destroys every space down to the last one
+# (yabai cannot destroy a display's final space) and creates 8 fresh ones to
+# land on exactly 9. Windows on destroyed spaces migrate to a neighbour rather
+# than closing, so after a reset they pile up on the surviving space.
 #
 # Runs in the FOREGROUND deliberately. Backgrounding it would shave ~1.5s off a
 # cold start (space creation costs ~150ms each through the SA), but it would
@@ -94,5 +92,21 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" ma
 # is no API to dress a space you aren't on), so running it unconditionally would
 # make every yabai restart flick through your desktops for a few seconds.
 [ $? -eq 10 ] && "$HOME/.config/yabai/set-wallpapers.sh" 1
+
+# ── apps: a home space per app, opened at login ───────────────────────────
+# WHICH app goes WHERE lives in apps.conf (same folder) — edit that, then
+# check it with `place-apps.sh check`. place-apps.sh is only the machinery.
+#
+# `rules` adds one yabai rule per app (space=…) so its windows always land on
+# its space, also mid-session, then `rule --apply` moves already-open windows.
+# Must run AFTER reset-spaces.sh: yabai resolves `space=` to a space ID when
+# the rule is added, and reset-spaces.sh may have just created fresh ones.
+# Foreground, ~100ms.
+#
+# `launch` opens every listed app that isn't running, without stealing focus.
+# Backgrounded: it sleeps between launches and nothing here waits on it. It
+# skips running apps, so a restart mid-session relaunches nothing.
+"$HOME/.config/yabai/place-apps.sh" rules
+"$HOME/.config/yabai/place-apps.sh" launch >/dev/null 2>&1 &
 
 echo "yabai configuration loaded.."
