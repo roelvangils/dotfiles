@@ -4,15 +4,19 @@
 #
 # Called from ~/.yabairc on every yabai start. Safe to run by hand at any time.
 #
-# WHY CONVERGE INSTEAD OF "DESTROY ALL, THEN CREATE 9"
-# yabai refuses to destroy a display's LAST space (there is no such thing as a
-# display with zero spaces), so a literal wipe is impossible. This adds the
-# missing spaces or removes the surplus ones instead, which lands on the same
-# end state and — importantly — is a no-op when the count is already right, so
-# a yabai restart mid-session doesn't churn your desktop.
+# STRATEGY: wipe and rebuild, but only when the count says things are messed up.
+# A count of 8 or 9 is considered sane and the layout is left untouched (labels
+# are still re-applied). Anything else (< 8 or > 9) triggers a full reset:
+# destroy every space down to the last one (yabai cannot destroy a display's
+# LAST space — a display with zero spaces does not exist), then create 8 fresh
+# ones to land on 9.
 #
 # Destroying a space does NOT close its windows: macOS migrates them to the
-# neighbouring space. You may have to redistribute them afterwards.
+# neighbouring space. After a reset, everything piles up on the surviving space
+# and you may have to redistribute.
+#
+# Native-fullscreen spaces cannot be destroyed while their app is fullscreen,
+# so with those present the wipe may settle above 1 before rebuilding.
 #
 # Requires the scripting addition (space --create/--destroy go through it).
 
@@ -63,26 +67,38 @@ have=$(count)
 # it, because a freshly created space starts on the default wallpaper.
 changed=0
 
-# ── grow ──────────────────────────────────────────────────────────────────
-while [ "$have" -lt "$WANT" ]; do
-    "$YABAI" -m space --create "$DISPLAY_SEL" || {
-        echo "reset-spaces: --create failed (scripting addition loaded?)" >&2
-        break
-    }
-    changed=1
-    sleep 0.15   # the SA creates asynchronously; querying too soon under-counts
-    have=$(count)
-done
+# Only reset when the count is clearly wrong. 8 or 9 = sane, leave the layout
+# alone; anything else means the spaces are messed up and we rebuild from scratch.
+if [ "$have" -lt 8 ] || [ "$have" -gt "$WANT" ]; then
+    echo "reset-spaces: $have spaces on display $DISPLAY_SEL — wiping and rebuilding."
 
-# ── shrink ────────────────────────────────────────────────────────────────
-if [ "$have" -gt "$WANT" ]; then
-    while read -r idx; do
-        [ "$have" -le "$WANT" ] && break
-        "$YABAI" -m space --destroy "$idx" 2>/dev/null || continue
+    # ── wipe: destroy everything until one space is left ──────────────────
+    # Highest index first, so destroying one never shifts the index of another
+    # we still intend to destroy. Re-query each pass in case indices moved.
+    while [ "$have" -gt 1 ]; do
+        before=$have
+        while read -r idx; do
+            [ "$have" -le 1 ] && break
+            "$YABAI" -m space --destroy "$idx" 2>/dev/null || continue
+            changed=1
+            sleep 0.15   # the SA destroys asynchronously; querying too soon over-counts
+            have=$(count)
+        done < <(destroyable_desc)
+        # No progress in a full pass (e.g. only native-fullscreen spaces left):
+        # bail out of the wipe rather than spin forever.
+        [ "$have" -eq "$before" ] && break
+    done
+
+    # ── rebuild: create spaces until we're back at 9 ──────────────────────
+    while [ "$have" -lt "$WANT" ]; do
+        "$YABAI" -m space --create "$DISPLAY_SEL" || {
+            echo "reset-spaces: --create failed (scripting addition loaded?)" >&2
+            break
+        }
         changed=1
-        sleep 0.15
+        sleep 0.15   # the SA creates asynchronously; querying too soon under-counts
         have=$(count)
-    done < <(destroyable_desc)
+    done
 fi
 
 [ "$have" -ne "$WANT" ] &&

@@ -26,7 +26,23 @@ PY=/usr/bin/python3          # absolute: skhd runs under launchd with a minimal 
 TARGET="${1:?usage: move-window-to-space.sh <next|prev|first|last|N> [follow]}"
 FOLLOW="${2:-}"
 
+HS=/opt/homebrew/bin/hs
+
 beep() { osascript -e beep >/dev/null 2>&1 & }
+
+# A beep alone never said WHICH thing went wrong, so a failed move looked
+# identical to a mistyped space number. Pair it with an on-screen toast.
+#
+# There is deliberately no fallback path here. Moving another app's window
+# between spaces goes through SkyLight (SLSMoveWindowsToManagedSpace), which
+# modern macOS only honours from a process injected into Dock — that is exactly
+# what yabai's scripting addition is for. Hammerspoon's hs.spaces.moveWindowToSpace
+# returns true and moves nothing (verified on this machine, on ordinary
+# AX-visible windows too), so when yabai can't act, nothing else can either.
+fail() {
+    beep
+    "$HS" -A -t 2 -c "require('toast').show([[$1]], { duration = 3 })" >/dev/null 2>&1 &
+}
 
 spaces=$("$YABAI" -m query --spaces 2>/dev/null)   || { beep; exit 0; }
 current=$("$YABAI" -m query --spaces --space 2>/dev/null) || { beep; exit 0; }
@@ -51,17 +67,29 @@ case "$TARGET" in
     *)     t=$TARGET ;;
 esac
 
-# Out of range -> beep instead of failing silently. This is the common case:
+# Out of range -> say so instead of failing silently. This is the common case:
 # you have 4 spaces and hit the binding for 7.
 if [ "$t" -lt 1 ] || [ "$t" -gt "$count" ]; then
-    beep
+    fail "No space $t — you have $count"
     exit 0
 fi
 
-# Moving fails when nothing is focused, or the window is unmanaged (a
-# scratchpad, a rule with manage=off). Beep rather than pretend it worked.
-if ! "$YABAI" -m window --space "$t" 2>/dev/null; then
-    beep
+# Moving fails when nothing is focused, when the window is unmanaged (a
+# scratchpad, a rule with manage=off), or when yabai holds no Accessibility
+# reference for it (the app stopped publishing its AX window list — Safari does
+# this). yabai spells that last one "could not locate the window to act on",
+# which is worth translating: the fix is to relaunch the app, and nothing about
+# the keystroke was wrong.
+if ! err=$("$YABAI" -m window --space "$t" 2>&1); then
+    # Ask macOS, not yabai, which app is in front: in the AX-dark case yabai has
+    # no focused window to report, which is the whole problem.
+    app=$("$HS" -A -t 2 -c 'return hs.application.frontmostApplication():name()' 2>/dev/null | tail -1)
+    case "$err" in
+        *"locate the window"*)
+            fail "${app:-This window} is invisible to Accessibility — relaunch it to regain window control" ;;
+        *)
+            fail "Could not move ${app:-the window} to space $t" ;;
+    esac
     exit 0
 fi
 

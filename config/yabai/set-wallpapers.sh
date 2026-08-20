@@ -9,7 +9,7 @@
 #
 # ── EDIT HERE ─────────────────────────────────────────────────────────────
 # Which set gets applied when no --set is given (this is what ~/.yabairc uses).
-ACTIVE_SET="et"
+ACTIVE_SET="september"
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 
@@ -28,7 +28,11 @@ WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 #          ratio (16:9 here).
 #   fit  — show the whole frame, pad with black. Right for wider-than-16:9
 #          cinema stills; `fill` would crop ~19% off the sides of a 2.20:1 frame.
+#   REPEAT   — SET_REPEAT=1 lets a set with FEWER than 9 images cycle across
+#              the spaces (1,2,…,n,1,2,…). For per-episode sets where only a
+#              handful of stills exist anywhere. Without it, <9 is an error.
 load_set() {
+    SET_REPEAT=0
     case "$1" in
         photos)
             # Landscape picks from the top-level folder, all >= 5120px wide so
@@ -46,6 +50,28 @@ load_set() {
                 "mo-xf3o1tBz13o-unsplash.jpg"                  # 8  Music & Movies
                 "boliviainteligente-ZPTv34ObQQs-unsplash.jpg"  # 9  Monitoring & Dashboards
             )
+            ;;
+        fluted)
+            # BasicAppleGuy "Fluted Gradients" (February 2026 edition):
+            # basicappleguy.com/basicappleblog/fluted-gradients-february-2026-edition
+            # Abstract gradients behind fluted-glass ribbing. Mac downloads are
+            # 6016x3900 — LARGER than the panel, so nothing upscales (unique in
+            # this roster). 14 existed; the nine picked for maximum hue spread,
+            # with two dark frames (08/09) as low-light anchors.
+            SET_DIR="$WALLPAPER_DIR/Fluted Gradients Feb 2026"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        september)
+            # BasicAppleGuy "Gradients of September" (2025 edition):
+            # basicappleguy.com/basicappleblog/gradients-of-september-2025-edition
+            # Soft blurred gradients, no texture. Same 6016x3900 Mac size as
+            # `fluted` — no upscaling. 16 existed, many in the same sunset
+            # family; the nine avoid the near-duplicates and end on the black
+            # CMYK frame (09) as the dark anchor.
+            SET_DIR="$WALLPAPER_DIR/Gradients September 2025"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
             ;;
         2001)
             # 2001 is 2.20:1 Super Panavision, so it letterboxes on a 16:9 panel
@@ -191,6 +217,322 @@ load_set() {
             SET_MODE="fill"
             SET_FILES=()   # glob
             ;;
+        westworld)
+            # TMDB backdrops, full-frame 16:9, all native 3840x2160 — `fill`.
+            # 93 backdrops on TMDB but heavy on duplicates (three of the same
+            # skull key art, three of the S3 robot-in-desert); the nine are one
+            # of each duplicate group plus the best photographic frames. Good
+            # split: three graphic key-art pieces, six warm western landscapes.
+            SET_DIR="$WALLPAPER_DIR/Westworld"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        devs)
+            # TMDB backdrops, full-frame — `fill`. THIN SOURCE: only 13 usable
+            # backdrops, 5 native 4K; most of the nine are ~3000px and upscale
+            # on the 5120x2880 panel. Palette clusters into forest-green/blue
+            # and Devs-lab gold; three frames are face portraits (unavoidable).
+            SET_DIR="$WALLPAPER_DIR/Devs"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        snowpiercer)
+            # TMDB backdrops, full-frame — `fill`. Every backdrop is character
+            # key art — no clean landscapes exist for this show. Overwhelmingly
+            # icy blue/teal; only 04 (burning W emblem) breaks the palette.
+            # Four of nine are native 4K, the rest 2048px → visible upscale.
+            SET_DIR="$WALLPAPER_DIR/Snowpiercer"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        alteredcarbon)
+            # TMDB backdrops, full-frame — `fill`. Only 3 native-4K frames
+            # existed (2 used); three of the nine are 1080p and upscale hard on
+            # the 5120x2880 panel. Palette is heavily teal/green throughout —
+            # closest neighbour to the Blade Runner sets in look.
+            SET_DIR="$WALLPAPER_DIR/Altered Carbon"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        mandalorian)
+            # TMDB backdrops, full-frame — `fill`. The deepest TV pool here:
+            # 56 native-4K backdrops, all nine picks 3840x2160 textless. Mando
+            # appears in every frame (no pure landscapes among the top-voted),
+            # but the vistas behind him carry the variety.
+            SET_DIR="$WALLPAPER_DIR/The Mandalorian"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        bebop)
+            # Cowboy Bebop (1998 anime series). TMDB backdrops, full-frame —
+            # `fill`. Only 3 of 153 backdrops are native 4K; most of the nine
+            # are 1920-2560px and upscale ~2x+. Flat-colour anime art hides the
+            # softness better than photography would (same logic as wargames).
+            SET_DIR="$WALLPAPER_DIR/Cowboy Bebop"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        gits)
+            # Ghost in the Shell (1995 film). TMDB backdrops, full-frame —
+            # `fill`. 15 native-4K existed; six of the nine are 3840, three are
+            # 1920. Heavy teal/cyan palette; the near-white ink-art frame (09)
+            # and the dark atrium/rooftop frames anchor the contrast.
+            SET_DIR="$WALLPAPER_DIR/Ghost in the Shell"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        akira)
+            # Akira (1988). TMDB backdrops, full-frame — `fill`. 12 native-4K
+            # but mostly text/logo variants — only 3 textless 4K made the nine;
+            # the rest are 1920-2635px. Palette skews strongly red; 04 (cryo
+            # chamber) is nearly black and works as the dark-space anchor.
+            SET_DIR="$WALLPAPER_DIR/Akira"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        sunshine)
+            # Sunshine (2007). TMDB backdrops, full-frame — `fill`. THIN: 5
+            # native-4K, only one textless; most of the nine are 1920px and
+            # upscale ~2.7x. Palette is dominated by orange/gold by design —
+            # the three cool-toned frames (04/05/06) are spaced apart.
+            SET_DIR="$WALLPAPER_DIR/Sunshine"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        annihilation)
+            # TMDB backdrops, full-frame — `fill`. 37 native-4K, all nine picks
+            # 3840x2160. Palette skews green/iridescent-pastel (the Shimmer);
+            # three frames share a "figures in vegetation" motif but differ in
+            # framing.
+            SET_DIR="$WALLPAPER_DIR/Annihilation"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        oblivion)
+            # TMDB backdrops, full-frame — `fill`. 13 native-4K but 7 are
+            # near-duplicate Cruise promo crops, so only three of the nine are
+            # native 4K; the smallest are ~1080p-2160px and soften visibly on
+            # the 5120x2880 panel. Palette is desaturated blue-grey/white —
+            # the golden Skytower frames (04/05) are the colour outliers.
+            SET_DIR="$WALLPAPER_DIR/Oblivion"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        her)
+            # Her (2013). TMDB backdrops, full-frame — `fill`. Three of nine
+            # native 4K, the rest 2560px (moderate upscale). Nearly every frame
+            # contains Theodore — the film offers no people-free frames — so
+            # the nine were chosen for maximum colour spread instead:
+            # red/teal/blue/gold/dark/grey/multi/black/white.
+            SET_DIR="$WALLPAPER_DIR/Her"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        gattaca)
+            # TMDB backdrops, full-frame — `fill`. Six of nine native 4K; only
+            # ~13 genuinely distinct frames exist on TMDB (many dupes/crops).
+            # Palette alternates amber-gold vs teal-green, with one deliberate
+            # B&W frame (06, the helix staircase).
+            SET_DIR="$WALLPAPER_DIR/Gattaca"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        tales)
+            # Tales from the Loop. TMDB backdrops, full-frame — `fill`. Only
+            # one native-4K frame; the rest are 1920px upscaled ~2.7x, which
+            # the painterly Stålenhag-style art absorbs gracefully (same logic
+            # as wargames). All illustrations, no photography; heavy
+            # blue/winter bias in three frames.
+            SET_DIR="$WALLPAPER_DIR/Tales from the Loop"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        dark)
+            # Dark (2017). TMDB backdrops, full-frame — `fill`. Eight of nine
+            # native 4K. Palette is deliberately desaturated teal/grey — the
+            # spaces distinguish by subject and the few warm accents (red
+            # house, lamplit workshop, red bedroom), not by hue.
+            SET_DIR="$WALLPAPER_DIR/Dark"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        andor)
+            # TMDB backdrops, full-frame — `fill`. All nine native 4K from a
+            # 73-strong 4K pool, BUT the textless art is ~6 pieces in many
+            # near-duplicate crops — only 7 distinct wide compositions existed,
+            # so 08/09 are character close-ups to reach nine.
+            SET_DIR="$WALLPAPER_DIR/Andor"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        scavengers)
+            # Scavengers Reign. TMDB backdrops, full-frame — `fill`. Only two
+            # distinct textless 4K compositions; the other seven are ~1080p
+            # upscaled ~2.5x — flat-shaded animation, upscales cleanly. The
+            # most saturated and varied palette of any set: excellent
+            # space-differentiation.
+            SET_DIR="$WALLPAPER_DIR/Scavengers Reign"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        raisedbywolves)
+            # TMDB backdrops, full-frame — `fill`. Only SIX distinct frames
+            # exist (the other 20 backdrops are crops/logo variants of the same
+            # key art), so spaces 7-9 cycle back to frames 1-3 via SET_REPEAT.
+            # Palette split between dark teal-grey and golden amber.
+            SET_DIR="$WALLPAPER_DIR/Raised by Wolves"
+            SET_MODE="fill"
+            SET_REPEAT=1
+            SET_FILES=()   # glob
+            ;;
+        threebody)
+            # 3 Body Problem. TMDB backdrops, full-frame — `fill`. Four native
+            # 4K; the rest 2160-3600px (mild upscale). Good colour spread —
+            # orange desert, blue snowfield, gold VR frames, muted 1966 forest.
+            SET_DIR="$WALLPAPER_DIR/3 Body Problem"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        bsg)
+            # Battlestar Galactica (2004). TMDB backdrops, full-frame — `fill`.
+            # ALL backdrops are cast promo art — no textless ship/space frames
+            # exist on TMDB at all. Five of the nine are 1080p upscaled ~2.7x
+            # (visibly soft). The weakest set technically; kept because the
+            # Last Supper tableau and the Six-in-red frames are iconic.
+            SET_DIR="$WALLPAPER_DIR/Battlestar Galactica"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        stationeleven)
+            # Station Eleven. TMDB backdrops, full-frame — `fill`. Only EIGHT
+            # distinct frames exist (21 native-4K backdrops collapse to two
+            # compositions plus variants); space 9 cycles back to frame 1 via
+            # SET_REPEAT. Two frames are 960p upscaled ~3x. Palette skews
+            # muted/pale — the quiet set of the roster.
+            SET_DIR="$WALLPAPER_DIR/Station Eleven"
+            SET_MODE="fill"
+            SET_REPEAT=1
+            SET_FILES=()   # glob
+            ;;
+        contact)
+            # Contact (1997). TMDB backdrops, full-frame — `fill`. THIN: the
+            # pool is almost entirely faces, so five of nine are face-forward
+            # frames, and three are 1280x720 → soft ~4x upscale on the
+            # 5120x2880 panel. Heavy blue bias. The VLA night frame (01) is the
+            # keeper.
+            SET_DIR="$WALLPAPER_DIR/Contact"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        exmachina)
+            # Ex Machina. TMDB backdrops, full-frame — `fill`. All nine picks
+            # 3840x2160 textless from an 18-strong 4K pool. Strong light/dark
+            # and colour variety — one of the cleanest TMDB sets.
+            SET_DIR="$WALLPAPER_DIR/Ex Machina"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        solaris)
+            # Solaris (1972, Tarkovsky). TMDB backdrops, full-frame — `fill`.
+            # Three of nine native 4K; the ocean frame (01) is 1600px and the
+            # station corridor (03) 1280px — noticeable upscaling, plus 1972
+            # film grain throughout, which hides some of the softness.
+            SET_DIR="$WALLPAPER_DIR/Solaris"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        stalker)
+            # Stalker (1979, Tarkovsky). TMDB backdrops, full-frame — `fill`.
+            # Only one usable native-4K frame; the rest are 1817-2649px and
+            # everything upscales. Palette is nearly two-note — sepia/amber vs
+            # desaturated green — so spaces distinguish by composition more
+            # than colour.
+            SET_DIR="$WALLPAPER_DIR/Stalker"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        furyroad)
+            # Mad Max: Fury Road. TMDB backdrops, full-frame — `fill`. All nine
+            # picks 3840x2160 textless from a 41-strong 4K pool. Dominated by
+            # the film's orange/teal grade; the pale-sand frames (02/04/08) are
+            # the outliers that keep spaces distinguishable. The loudest set.
+            SET_DIR="$WALLPAPER_DIR/Fury Road"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        dune)
+            # TMDB backdrops from BOTH parts (2021 movie id 438631 + 2024 id
+            # 693134), full-frame 16:9 — `fill`. The deepest TMDB pool of any
+            # set: 98 textless 4K backdrops; 28 downloaded, plenty of spares.
+            SET_DIR="$WALLPAPER_DIR/Dune"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        matrix)
+            # TMDB backdrops, full-frame — `fill`. 22 at 4K for a 1999 film,
+            # remaster-fed. The nine favour iconography (code, pills, dojo)
+            # over the face-heavy marketing shots.
+            SET_DIR="$WALLPAPER_DIR/The Matrix"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        martian)
+            # TMDB backdrops, full-frame — `fill`. 12 at 4K, so only three
+            # spares — and one of those is a b/w Ridley Scott behind-the-scenes
+            # shot, left unused deliberately.
+            SET_DIR="$WALLPAPER_DIR/The Martian"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        fallout)
+            # TMDB backdrops, full-frame — `fill`. 17 at 4K. Several are
+            # variants of the same Vegas-sign and vault-door art; the nine keep
+            # one of each.
+            SET_DIR="$WALLPAPER_DIR/Fallout"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        expanse)
+            # TMDB backdrops, full-frame — `fill`. THE WEAK SET resolution-wise,
+            # WarGames-style: only 5 textless backdrops at 4K, the other four
+            # are ~3000px and upscale ~1.7x. No spares at all — all nine
+            # candidates are in use.
+            SET_DIR="$WALLPAPER_DIR/The Expanse"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        blackmirror)
+            # TMDB EPISODE STILLS, not show backdrops — full-frame, `fill`.
+            # A best-of MIX across episodes: San Junipero (spaces 1-4), Hotel
+            # Reverie (5-6), USS Callister, Joan Is Awful, Striking Vipers.
+            # For single-episode sets use `sanjunipero` / `hotelreverie`.
+            SET_DIR="$WALLPAPER_DIR/Black Mirror"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        sanjunipero)
+            # EVERY San Junipero still that exists on TMDB — all seven. Spaces
+            # 1-4 get the 4K frames (convertible, brick wall, Tucker's, beach
+            # house); 5-7 are 1400-2048px and upscale visibly (suffix = source
+            # width); 8-9 cycle back to frames 1-2 via SET_REPEAT. Gallery
+            # sites with 1080p full-episode caps exist (fancaps, thetvshows)
+            # but block non-browser scraping, and 1080p wouldn't beat these
+            # anyway.
+            SET_DIR="$WALLPAPER_DIR/San Junipero"
+            SET_MODE="fill"
+            SET_REPEAT=1
+            SET_FILES=()   # glob
+            ;;
+        hotelreverie)
+            # All four Hotel Reverie stills on TMDB: three b/w in-Reverie
+            # frames (3840/3750px) plus one colour Brandy frame at 1920px.
+            # Cycles 1-4,1-4,1 across the nine spaces — heavy repetition, but
+            # that is everything that exists.
+            SET_DIR="$WALLPAPER_DIR/Hotel Reverie"
+            SET_MODE="fill"
+            SET_REPEAT=1
+            SET_FILES=()   # glob
+            ;;
         walle)
             # TMDB backdrops, full-frame — `fill`. 20 images at native 4K, and the
             # most varied set of the lot: wide hue range AND wide brightness range,
@@ -231,7 +573,7 @@ load_set() {
     return 0
 }
 # Declared outside load_set so the error branch above can name the sets too.
-SETS_ALL_STATIC="photos 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark severance formankind silo foundation walle raiders closeencounters hollywood"
+SETS_ALL_STATIC="photos fluted september 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark dune matrix martian severance formankind silo foundation westworld devs snowpiercer alteredcarbon mandalorian bebop gits akira sunshine annihilation oblivion her gattaca tales dark andor scavengers raisedbywolves threebody bsg stationeleven contact exmachina solaris stalker furyroad fallout expanse blackmirror sanjunipero hotelreverie walle raiders closeencounters hollywood"
 # ──────────────────────────────────────────────────────────────────────────
 #
 # HOW THIS WORKS, AND WHY IT LOOKS CLUMSY
@@ -286,7 +628,16 @@ resolve_set() {
             [ -n "$f" ] && SET_RESOLVED+=("$f")
         done < <(find "$SET_DIR" -maxdepth 1 -type f \
                     \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.heic' \) \
-                    2>/dev/null | sort | head -"$WANT")
+                    ! -name 'zz-*' 2>/dev/null | sort | head -"$WANT")
+    fi
+    # SET_UNIQUE = distinct images before any cycling; --list reports it.
+    SET_UNIQUE="${#SET_RESOLVED[@]}"
+    if [ "$SET_REPEAT" -eq 1 ] && [ "$SET_UNIQUE" -gt 0 ]; then
+        i=0
+        while [ "${#SET_RESOLVED[@]}" -lt "$WANT" ]; do
+            SET_RESOLVED+=("${SET_RESOLVED[$i]}")
+            i=$(( (i + 1) % SET_UNIQUE ))
+        done
     fi
     return 0
 }
@@ -299,7 +650,11 @@ if [ "$DO_LIST" -eq 1 ]; then
         n="${#SET_RESOLVED[@]}"
         mark=" "; [ "$s" = "$ACTIVE_SET" ] && mark="*"
         status="ready"
-        [ "$n" -lt "$WANT" ] && status="only $n/$WANT images — drop files in $SET_DIR"
+        if [ "$SET_REPEAT" -eq 1 ] && [ "$SET_UNIQUE" -lt "$WANT" ]; then
+            status="ready ($SET_UNIQUE unique, cycled to $WANT)"
+        elif [ "$n" -lt "$WANT" ]; then
+            status="only $n/$WANT images — drop files in $SET_DIR"
+        fi
         printf "%s %-14s %-5s %s\n" "$mark" "$s" "$SET_MODE" "$status"
     done
     echo
