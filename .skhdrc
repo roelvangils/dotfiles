@@ -44,6 +44,13 @@
 # Reached from window mode by pressing `m`. Same capture-all behaviour; the HUD
 # switches to its move variant (title + follow/stay hint + space picker).
 :: move @ : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+# Reached from window mode by pressing `x`. Unlike move (which reuses the
+# window panel with a chip), the HUD REPLACES its sections with the ones
+# parsed from the `power <` bindings at the bottom of this file.
+:: power @ : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("power")' > /dev/null 2>&1
+# Reached from window mode by pressing `a`. Like power, the HUD swaps in its
+# own panel, parsed from the `arrange <` bindings below the move mode.
+:: arrange @ : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("arrange")' > /dev/null 2>&1
 
 # ── enter / leave ─────────────────────────────────────────────────────────
 # PRIMARY: a quick TAP on caps_lock. Karabiner's `to_if_alone` on that key
@@ -64,6 +71,14 @@
 fn - 0x50    ; window
 0x50         ; window
 hyper - 0x50 ; window
+
+# Summon / dismiss the scratchpad from ANYWHERE, no mode needed: hold caps
+# (hyper) and hit p. Same letter as the `p` row inside window mode; claiming
+# and releasing (shift-p) still live there. Free of conflicts: no Keyboard
+# Maestro macro or Karabiner rule uses full hyper + a letter (checked
+# 2026-08-16). When no window has been claimed the wrapper beeps + toasts
+# instead of failing silently into skhd's log.
+hyper - p : ~/.config/yabai/summon-scratchpad.sh pad
 
 # Four ways out, because being stuck in a capture mode is the failure case.
 # Tapping caps_lock again toggles back out — same gesture in and out.
@@ -86,18 +101,18 @@ window < return       ; default
 # Move focus by DIRECTION rather than by app — the main payoff of tiling.
 # DIR_SEL := north | east | south | west (doc/yabai.asciidoc:100).
 # h/j/k/l sit in the same physical spots on AZERTY as on QWERTY.
-window < h : /opt/homebrew/bin/yabai -m window --focus west     #= focus
-window < j : /opt/homebrew/bin/yabai -m window --focus south    #= focus
-window < k : /opt/homebrew/bin/yabai -m window --focus north    #= focus
-window < l : /opt/homebrew/bin/yabai -m window --focus east     #= focus
+window < h : /opt/homebrew/bin/yabai -m window --focus west     #= Focus
+window < j : /opt/homebrew/bin/yabai -m window --focus south    #= Focus
+window < k : /opt/homebrew/bin/yabai -m window --focus north    #= Focus
+window < l : /opt/homebrew/bin/yabai -m window --focus east     #= Focus
 
 # ── move windows around the tree (stays in mode) ──────────────────────────
 # --swap exchanges two windows in place. (--warp is the other option: it
 # re-parents the window, reshaping the tree rather than trading positions.)
-window < shift - h : /opt/homebrew/bin/yabai -m window --swap west   #= swap
-window < shift - j : /opt/homebrew/bin/yabai -m window --swap south  #= swap
-window < shift - k : /opt/homebrew/bin/yabai -m window --swap north  #= swap
-window < shift - l : /opt/homebrew/bin/yabai -m window --swap east   #= swap
+window < shift - h : /opt/homebrew/bin/yabai -m window --swap west   #= Swap
+window < shift - j : /opt/homebrew/bin/yabai -m window --swap south  #= Swap
+window < shift - k : /opt/homebrew/bin/yabai -m window --swap north  #= Swap
+window < shift - l : /opt/homebrew/bin/yabai -m window --swap east   #= Swap
 
 # ── rotate the layout (stays in mode) ─────────────────────────────────────
 # COUNTER-INTUITIVE: 270 is clockwise, 90 is counter-clockwise. The docs don't
@@ -106,19 +121,21 @@ window < shift - l : /opt/homebrew/bin/yabai -m window --swap east   #= swap
 # --rotate 270, which is a clockwise quarter turn). Don't "fix" these numbers.
 #
 # Only does anything on a bsp space — a float space has no tree to rotate.
-window < r         : /opt/homebrew/bin/yabai -m space --rotate 270   #= rotate clockwise
-window < shift - r : /opt/homebrew/bin/yabai -m space --rotate 90    #= rotate counter
+window < r         : /opt/homebrew/bin/yabai -m space --rotate 270   #= Rotate right
+window < shift - r : /opt/homebrew/bin/yabai -m space --rotate 90    #= Rotate left
 
 # Reset all split ratios to equal, after dragging borders around.
 # The shipped example (examples/skhdrc:89) uses `0`, but a literal 0 is
 # unreachable on AZERTY without Shift, so this uses the physical key position.
-window < 0x1D : /opt/homebrew/bin/yabai -m space --balance   #= balance splits
+window < 0x1D : /opt/homebrew/bin/yabai -m space --balance   #= Balance splits
 
 #== window
-# ── one-shot properties (invoke, then dismiss the HUD) ─────────────────────
+# ── fullscreen zoom (stays in mode, chip while active) ────────────────────
 # Fills the space with the focused window WITHOUT leaving your layout or
 # triggering a macOS fullscreen animation. Press again to drop back in place.
-window < f : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen; /opt/homebrew/bin/skhd -k "escape"   #= fullscreen
+# Used to exit the mode, which meant its HUD chip was never visible at the
+# moment you flipped it; now it behaves like the other stateful toggles.
+window < f : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("fullscreen")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen   #= Fullscreen
 
 # ── stateful toggles (flip and STAY, so the HUD chip updates in place) ─────
 # These are on/off states you may want to flip and see reflected, so instead of
@@ -128,19 +145,25 @@ window < f : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen; /opt/ho
 # Sticky: the window follows you onto every space. Native yabai toggle.
 # Flip the HUD chip FIRST (instant, from cache), then run the real toggle -- so
 # the highlight tracks the keypress instead of waiting on yabai.
-window < s : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("sticky")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle sticky   #= sticky
+window < s : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("sticky")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle sticky   #= Show on all Spaces
 
 # Always on top: no native toggle in v7 (`topmost` was replaced by the
 # `--sub-layer` setter), so this script reads the state and flips it.
 # Beeps if there's no focused window. Chip flipped first, same as sticky.
-window < t : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; ~/.config/yabai/toggle-topmost.sh   #= always on top
+window < t : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("topmost")' > /dev/null 2>&1; ~/.config/yabai/toggle-topmost.sh   #= Always on top
 
-# Toggle tiling for the CURRENT space only (bsp <-> float). Other spaces keep
-# whatever they were. Resets to the ~/.yabairc default when yabai restarts.
-# The script sends the mode-leaving escape ITSELF, but only when restoring to
-# float -- entering bsp keeps window mode (and the HUD) up so you can immediately
-# tune the new layout with swap/rotate/balance.
-window < b : ~/.config/yabai/toggle-layout.sh   #= bsp / float
+# Drop shadow: native yabai toggle (scripting addition, like opacity below).
+# The chip inverts while the shadow is OFF -- the engaged, non-default state.
+window < d : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("shadow")' > /dev/null 2>&1; /opt/homebrew/bin/yabai -m window --toggle shadow   #= Drop shadow
+
+# Opacity: 100% <-> 75%. yabai only has a setter, so the script reads the
+# current value and flips; restoring clears the override (--opacity 0.0)
+# instead of pinning 1.0. Chip inverts while translucent.
+window < o : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("opacity")' > /dev/null 2>&1; ~/.config/yabai/toggle-opacity.sh   #= Opacity 75%
+
+# `x` swaps the HUD for the power panel: system reloads, cleanup sweeps, and
+# global (all-window) switches. Same capture behaviour; x toggles back.
+window < x ; power
 
 # PIP: scales the window to fill the display, honouring your padding
 # (window_manager.c:2410 -> scripting_addition_scale_window). Note it SCALES
@@ -151,7 +174,12 @@ window < b : ~/.config/yabai/toggle-layout.sh   #= bsp / float
 #
 # On `i` rather than the `k` you asked for, because k is focus-north and part
 # of the hjkl core. Move it if you prefer — it is this one line.
-window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/skhd -k "escape"   #= pip (scale to display)
+window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/skhd -k "escape"   #= PiP (scale to display)
+
+# App Expose for the focused window's app: pick a sibling window visually.
+# One-shot like pip/fullscreen -- Expose is its own modal overlay, so the HUD
+# leaves rather than sitting on top of it.
+window < e : /opt/homebrew/bin/yabai -m window --toggle expose; /opt/homebrew/bin/skhd -k "escape"   #= App Exposé
 
 # ── nudge / size the focused window ───────────────────────────────────────
 # The ARROW keys and SPACE are handled in Hammerspoon (mouse-drag.lua), not here.
@@ -167,14 +195,17 @@ window < i : /opt/homebrew/bin/yabai -m window --toggle pip; /opt/homebrew/bin/s
 #
 # Usage: focus the window you want (a terminal is the classic choice), press
 # shift - p once to claim the "pad" label, then p from anywhere to show/hide
-# it. Press shift - p again on that window to release the label.
-window < p         : /opt/homebrew/bin/yabai -m window --toggle pad; /opt/homebrew/bin/skhd -k "escape"   #= show / hide
-window < shift - p : ~/.config/yabai/toggle-scratchpad.sh pad; /opt/homebrew/bin/skhd -k "escape"   #= claim / release
+# it. Press shift - p again on that window to release the label. Outside the
+# mode, hyper - p (bound globally near the top of this file) does the same
+# show/hide. The HUD shows which app currently holds the pad on the `p` row,
+# and dims the show/hide + recover rows while nothing is claimed.
+window < p         : /opt/homebrew/bin/yabai -m window --toggle pad; /opt/homebrew/bin/skhd -k "escape"   #= Show / hide
+window < shift - p : ~/.config/yabai/toggle-scratchpad.sh pad; /opt/homebrew/bin/skhd -k "escape"   #= Claim / release
 
 # If a scratchpad ever gets lost off-screen, this forcefully brings every
 # scratchpad window back to the front. Grouped with the other `p` bindings;
 # ctrl is free to use here because the mode captures everything anyway.
-window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt/homebrew/bin/skhd -k "escape"   #= recover lost pads
+window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt/homebrew/bin/skhd -k "escape"   #= Recover lost scratchpads
 
 #== spaces
 # ── switch to a space by number, then leave the mode ──────────────────────
@@ -184,15 +215,36 @@ window < ctrl - p : /opt/homebrew/bin/yabai -m window --scratchpad recover; /opt
 # (current bright, the rest dimmed), not as list rows. focus-space.sh beeps if
 # the target space doesn't exist, matching the global ctrl bindings.
 #
-# The one labelled row here is `m`, which starts the move-to-space chord below.
-window < m ; move   #= move to space (⇧ stay)
+# Two labelled rows here: `m` starts the move-to-space chord, `a` the arrange
+# chord (both defined further down).
+window < m ; move   #= Move to Space: digit or ←→ (⇧ = stay)
+window < a ; arrange   #= Arrange windows: T C S N (⇧ = this app only)
 # tab / shift-tab cycle spaces without leaving the mode. HANDLED IN HAMMERSPOON
 # (mouse-drag.lua), not here: skhd fired a yabai call plus a full `hs -c` CLI
 # invocation on every key repeat, which choked when tab was held down. The HUD's
 # event tap swallows tab first, so this line never actually runs -- it exists so
 # the binding still shows up on the cheat sheet (which is generated from this
 # file). Keep the label in sync with the Hammerspoon behaviour.
-window < tab : true   #= next space (⇧ prev)
+window < tab : true   #= Next Space (⇧ = previous)
+
+# Toggle tiling for the CURRENT space only (bsp <-> float). This is a
+# per-SPACE property -- every window on the space tiles or floats together --
+# which is why it lives under this heading and not under `window`. Other
+# spaces keep whatever they were; resets to the ~/.yabairc default when yabai
+# restarts. The HUD underlines the numbers of bsp spaces in its top row and
+# dims the tiling-only rows (swap/rotate/balance/fullscreen) while floating.
+# The script sends the mode-leaving escape ITSELF, but only when restoring to
+# float -- entering bsp keeps window mode (and the HUD) up so you can
+# immediately tune the fresh layout. The trailing `hs` call re-renders the
+# HUD from live yabai state (underlines + dimming); it no-ops when the script
+# already dismissed the HUD.
+window < b : ~/.config/yabai/toggle-layout.sh; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudRefresh()' > /dev/null 2>&1   #= Tile / float this Space
+
+# Padding & gaps for the CURRENT space, flipped together (they're one visual
+# idea: breathing room around and between tiles). Stays in the mode so you can
+# flip straight back. Only meaningful on a bsp space, so the HUD dims it in
+# float. No chip: the space query doesn't report padding/gap state.
+window < g : /opt/homebrew/bin/yabai -m space --toggle padding; /opt/homebrew/bin/yabai -m space --toggle gap   #= Padding & gaps
 # top row -> kVK_ANSI_1..9 (5 and 6 are swapped; 7/8/9 jump around)
 window < 0x12 : ~/.config/yabai/focus-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
 window < 0x13 : ~/.config/yabai/focus-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
@@ -220,8 +272,10 @@ window < 0x5C : ~/.config/yabai/focus-space.sh 9; /opt/homebrew/bin/skhd -k "esc
 # Pick a destination space for the FOCUSED window:
 #   digit         -> move & follow (land on that space with the window)
 #   shift + digit -> move & stay   (window goes, you don't)
+#   left / right  -> move & follow to the ADJACENT space (wraps around)
+#   shift + arrow -> throw it there & stay put
 # Both top row and numpad, by keycode (AZERTY-safe). move-window-to-space.sh
-# beeps if the target space doesn't exist or nothing movable is focused.
+# beeps AND toasts if the target space doesn't exist or the window can't be moved.
 
 # ── ways out (cancel without moving) ──────────────────────────────────────
 # `m` toggles move OFF: back to window mode (HUD stays, the m chip clears).
@@ -234,45 +288,89 @@ move < 0x50         ; default
 move < fn - 0x50    ; default
 move < hyper - 0x50 ; default
 
+# ── adjacent space: arrows ────────────────────────────────────────────────
+# left / right walk the window to the adjacent space. NOT BOUND HERE, for the
+# same reason as tab: these are meant to be HELD (keep tapping until you land on
+# the space you want), and a skhd binding would spawn the move script plus an
+# `hs -c` HUD refresh on every auto-repeat. Handled in Hammerspoon instead --
+# see hudThrowWindow in mouse-drag.lua, which throttles and keeps the HUD up.
+
 # ── move & FOLLOW: bare digit ─────────────────────────────────────────────
-move < 0x12 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x13 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x14 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x15 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x17 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x16 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x1A : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x1C : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x19 : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x53 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x54 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x55 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x56 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x57 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x58 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x59 : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x5B : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/skhd -k "escape"
-move < 0x5C : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/skhd -k "escape"
+move < 0x12 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x13 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x14 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x15 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x17 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x16 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x1A : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x1C : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x19 : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x53 : ~/.config/yabai/move-window-to-space.sh 1 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x54 : ~/.config/yabai/move-window-to-space.sh 2 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x55 : ~/.config/yabai/move-window-to-space.sh 3 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x56 : ~/.config/yabai/move-window-to-space.sh 4 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x57 : ~/.config/yabai/move-window-to-space.sh 5 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x58 : ~/.config/yabai/move-window-to-space.sh 6 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x59 : ~/.config/yabai/move-window-to-space.sh 7 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x5B : ~/.config/yabai/move-window-to-space.sh 8 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < 0x5C : ~/.config/yabai/move-window-to-space.sh 9 follow; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
 
 # ── move & STAY: shift + digit ────────────────────────────────────────────
-move < shift - 0x12 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x13 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x14 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x15 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x17 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x16 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x1A : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x1C : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x19 : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x53 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x54 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x55 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x56 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x57 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x58 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x59 : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x5B : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/skhd -k "escape"
-move < shift - 0x5C : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/skhd -k "escape"
+move < shift - 0x12 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x13 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x14 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x15 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x17 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x16 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x1A : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x1C : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x19 : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x53 : ~/.config/yabai/move-window-to-space.sh 1; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x54 : ~/.config/yabai/move-window-to-space.sh 2; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x55 : ~/.config/yabai/move-window-to-space.sh 3; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x56 : ~/.config/yabai/move-window-to-space.sh 4; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x57 : ~/.config/yabai/move-window-to-space.sh 5; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x58 : ~/.config/yabai/move-window-to-space.sh 6; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x59 : ~/.config/yabai/move-window-to-space.sh 7; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x5B : ~/.config/yabai/move-window-to-space.sh 8; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+move < shift - 0x5C : ~/.config/yabai/move-window-to-space.sh 9; /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudShow("move")' > /dev/null 2>&1
+
+# ══════════════════════════════════════════════════════════════════════════
+#  ARRANGE MODE — reached with `a` from window mode
+# ══════════════════════════════════════════════════════════════════════════
+# Re-arrange every visible window on the CURRENT space (all apps), or with
+# shift only the frontmost app's windows. Implemented in Hammerspoon
+# (window-management.lua, arrangeWindows): windows come from yabai's list, so
+# hidden helper panels never count and nothing is ever minimized. One-shot:
+# each action leaves the mode so you can see the result.
+#   t  tile     one row up to four windows, a grid beyond that
+#   c  cascade  equal-sized windows stepping down and right
+#   n  neat     large, lightly varied windows fanned along a diagonal --
+#               overlapping, but every title bar stays in view
+#   s  scatter  random positions, sizes kept
+# Only works on a FLOATING space; on a bsp space it toasts and does nothing.
+
+#== this space
+arrange < t         : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("tile")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Tile
+arrange < c         : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("cascade")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Cascade
+arrange < n         : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("neat")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Neat (tidy overlap)
+arrange < s         : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("scatter")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Scatter (random)
+
+#== this app only
+arrange < shift - t : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("tile", "app")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Tile
+arrange < shift - c : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("cascade", "app")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Cascade
+arrange < shift - n : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("neat", "app")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Neat
+arrange < shift - s : /opt/homebrew/bin/hs -A -t 3 -c 'arrangeWindows("scatter", "app")' > /dev/null 2>&1; /opt/homebrew/bin/skhd -k "escape"   #= Scatter
+
+# ── ways out ──────────────────────────────────────────────────────────────
+# `a` toggles back to the window panel; everything else leaves entirely.
+arrange < a            ; window
+arrange < escape       ; default
+arrange < q            ; default
+arrange < return       ; default
+arrange < 0x50         ; default
+arrange < fn - 0x50    ; default
+arrange < hyper - 0x50 ; default
 
 # ══════════════════════════════════════════════════════════════════════════
 #  SPACES — always live, outside any mode
@@ -439,3 +537,57 @@ ctrl + alt - 0x52  : ~/.config/yabai/move-window-to-space.sh last
 # documented at the f19 binding above.
 fn - 0x4F : ~/repos/praatpaal/praatpaal goto
 0x4F      : ~/repos/praatpaal/praatpaal goto
+
+# ══════════════════════════════════════════════════════════════════════════
+#  POWER MODE (window mode -> x)
+# ══════════════════════════════════════════════════════════════════════════
+# Rarely-needed, bigger-hammer commands. The HUD replaces the window panel
+# with the sections below (same #== / #= markers, parsed per mode).
+
+#== system
+# Restart yabai. Leaves the mode FIRST: the restart tears down yabai's query
+# API, so the HUD would otherwise sit there showing stale state.
+power < y : /opt/homebrew/bin/skhd -k "escape"; /opt/homebrew/bin/yabai --restart-service   #= Restart yabai
+
+# Restart skhd itself. The HUD is hidden first because skhd forgets its mode
+# state on restart -- without the hide, the panel would linger with no mode
+# behind it. The forked shell survives the restart long enough to finish.
+power < s : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudHide()' > /dev/null 2>&1; /opt/homebrew/bin/skhd --restart-service   #= Restart skhd
+
+# Reload the Hammerspoon config. Also leaves the mode first: the reload kills
+# the Lua side of the HUD mid-flight.
+power < h : /opt/homebrew/bin/skhd -k "escape"; sleep 0.2; /opt/homebrew/bin/hs -A -t 2 -c 'hs.reload()' > /dev/null 2>&1   #= Reload Hammerspoon
+
+# Reload the scripting addition (passwordless via /etc/sudoers.d/yabai; see
+# ~/.yabairc). The cure for "yabai stopped moving windows after Dock died".
+power < a : sudo /opt/homebrew/bin/yabai --load-sa; /opt/homebrew/bin/hs -A -t 2 -c 'require("toast").show([[Scripting addition reloaded]], { duration = 2 })' > /dev/null 2>&1   #= Reload the scripting addition
+
+#== cleanup
+# Quit every GUI app that has no windows anywhere. Checked against yabai's
+# window list, NOT Accessibility -- an AX-dark app still has real windows and
+# must not be killed. Finder and Hammerspoon are always spared. Defined in
+# mouse-drag.lua; toasts what it quit.
+power < w : /opt/homebrew/bin/hs -A -t 3 -c 'powerQuitWindowlessApps()' > /dev/null 2>&1   #= Quit apps without windows
+
+# Undo every per-window override (opacity / shadow / sub-layer) in one sweep.
+# Sticky and the scratchpad label are left alone -- see the script header.
+power < r : ~/.config/yabai/reset-overrides.sh   #= Reset all window overrides
+
+#== global
+# All-window shadow flip (yabai config) -- the big brother of window mode's
+# per-window `d`. Chip while shadows are globally OFF.
+power < d : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("gshadow")' > /dev/null 2>&1; ~/.config/yabai/toggle-global-shadow.sh   #= Hide all shadows
+
+# yabai window animations: 0.15s <-> instant. Instant is the screen-recording
+# setting; a yabai restart reapplies ~/.yabairc's 0.15. Chip while instant.
+power < n : /opt/homebrew/bin/hs -A -t 1 -c 'yabaiHudFlip("ganim")' > /dev/null 2>&1; ~/.config/yabai/toggle-animations.sh   #= Disable window animations
+
+# ── ways out ──────────────────────────────────────────────────────────────
+# `x` toggles back to the window panel; everything else leaves entirely.
+power < x ; window
+power < escape       ; default
+power < q            ; default
+power < return       ; default
+power < 0x50         ; default
+power < fn - 0x50    ; default
+power < hyper - 0x50 ; default
