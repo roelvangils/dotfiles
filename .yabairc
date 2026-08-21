@@ -97,8 +97,9 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" ma
 # WHICH app goes WHERE lives in apps.conf (same folder) — edit that, then
 # check it with `place-apps.sh check`. place-apps.sh is only the machinery.
 #
-# `rules` adds one yabai rule per app (space=…) so its windows always land on
-# its space, also mid-session, then `rule --apply` moves already-open windows.
+# `rules` adds one yabai rule per app (space=…), then `rule --apply` moves
+# already-open windows home. The rules are one-shot: `launch` removes them
+# after settling, so a new window made mid-session stays on the current space.
 # Must run AFTER reset-spaces.sh: yabai resolves `space=` to a space ID when
 # the rule is added, and reset-spaces.sh may have just created fresh ones.
 # Foreground, ~100ms.

@@ -5,9 +5,10 @@
 # WHICH app goes WHERE is configured in apps.conf, next to this script.
 # This file is only the machinery; you should not need to edit it.
 #
-#   rules   add a yabai rule per app so its windows always land on its space
-#           (also mid-session: a new Safari window opened from space 7 goes to
-#           space 2), then `rule --apply` to move windows that are already open.
+#   rules   add a yabai rule per app and `rule --apply` it, so existing
+#           windows are moved home on a yabai (re)start. The rules are
+#           ONE-SHOT: `launch` removes them once everything has settled, so
+#           mid-session a new window simply opens on the space you are on.
 #   launch  open every app marked launch=yes that isn't running, in the
 #           background and without stealing focus. Idempotent: running apps
 #           are skipped, so a `yabai --restart-service` during the day
@@ -117,6 +118,18 @@ yabai_sees() {
         "$JQ" -e --arg a "$1" 'any(.[]; .app == $a and .role != "")' >/dev/null
 }
 
+# Remove every place:* rule. Called at the end of `launch`: the rules only
+# exist to place windows during startup — left in place they would also yank
+# every NEW window to its app's home space mid-session, which is exactly the
+# behaviour we don't want (new windows should open on the current space).
+clear_rules() {
+    while read -r label; do
+        [ -z "$label" ] && continue
+        "$YABAI" -m rule --remove "$label" 2>/dev/null
+    done < <("$YABAI" -m rule --list 2>/dev/null |
+        "$JQ" -r '.[].label | select(startswith("place:"))')
+}
+
 # ── rules ─────────────────────────────────────────────────────────────────
 
 do_rules() {
@@ -171,6 +184,8 @@ do_launch() {
     done < <(parse_conf)
     echo "place-apps: $launched launched, $running already running."
     [ "$launched" -gt 0 ] && settle "${just_launched[@]}"
+    # Placement is done — drop the one-shot rules so new windows stay put.
+    clear_rules
 }
 
 # Three ways an app launched with -g ends up outside its space rule:
