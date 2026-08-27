@@ -1,7 +1,10 @@
 #!/bin/sh
 # Turns on the cozy lights (Home Office Desk Lamp + Corner lamp).
 # Used by the login LaunchAgent (be.elevenways.hue-cozy-login) and ~/.wakeup.
-export HOME="/Users/roelvangils"
+# A LaunchAgent starts with a bare environment, so HOME may be unset — but
+# only fall back, never overwrite: this file is shared across machines.
+: "${HOME:=$(eval echo ~$(id -un))}"
+export HOME
 export XDG_CONFIG_HOME="$HOME/.config"
 LOG=/tmp/hue-cozy-login.log
 

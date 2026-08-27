@@ -1,3 +1,6 @@
 #!/bin/sh
-exec /Users/roelvangils/repos/slack-extract/.venv/bin/python \
-     /Users/roelvangils/repos/slack-extract/yap.py "$@"
+# yap — Slack export CLI. Lives in ~/repos/slack-extract; this is only the
+# entry point that puts it on PATH. $HOME, not a hardcoded path: this file
+# is shared across machines and the username differs between them.
+exec "$HOME/repos/slack-extract/.venv/bin/python" \
+     "$HOME/repos/slack-extract/yap.py" "$@"
