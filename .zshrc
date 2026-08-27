@@ -392,6 +392,66 @@ require() {
     fi
 }
 
+# What this machine is missing. Every dependency in this file is guarded, so
+# a missing tool costs you a feature instead of an error — which is the right
+# default, but it means an absent command is indistinguishable from one that
+# was never configured. This says out loud what the guards silently skip.
+doctor() {
+    local -a gone
+    local r name
+
+    print "tools"
+    # Only what this config actually calls. Anything else you may like, but
+    # its absence changes nothing about the shell you get.
+    for name in antidote mise zoxide eza micro git gh; do
+        if command -v "$name" >/dev/null; then
+            print "  ok    $name"
+        else
+            print "  MISS  $name"
+            gone+=("$name")
+        fi
+    done
+
+    print "\ncoupled repositories"
+    # Loaded by path, not by PATH: without the directory the command does not
+    # exist at all. See the fpath block near the top and codescribe() below.
+    for r in dir codescribe; do
+        if [[ -d "$HOME/repos/$r" ]]; then
+            print "  ok    ~/repos/$r"
+        else
+            print "  MISS  ~/repos/$r — git clone https://github.com/roelvangils/$r.git ~/repos/$r"
+            gone+=("$r")
+        fi
+    done
+    # codescribe runs from its own virtualenv, so the clone alone is not enough.
+    if [[ -d "$HOME/repos/codescribe" && ! -x "$HOME/repos/codescribe/engine/.venv/bin/python" ]]; then
+        print "  MISS  codescribe venv — (cd ~/repos/codescribe/engine && uv venv --python 3.12 && uv pip install -r requirements-lock.txt -e .)"
+        gone+=("codescribe-venv")
+    fi
+
+    print "\nper-machine files"
+    # Untracked by design: the repo holds what every machine shares.
+    for name in .secrets .zshenv.local .zshrc.local; do
+        [[ -e "$HOME/$name" ]] && print "  ok    ~/$name" || print "  --    ~/$name (none)"
+    done
+
+    # Window management is linked only on a machine with a display. Reporting
+    # yabai as missing on a headless box would be noise, not news.
+    if [[ -e "$HOME/.yabairc" ]]; then
+        print "\nwindow management"
+        for name in yabai skhd sketchybar borders hs; do
+            if command -v "$name" >/dev/null; then
+                print "  ok    $name"
+            else
+                print "  MISS  $name"
+                gone+=("$name")
+            fi
+        done
+    fi
+
+    (( ${#gone[@]} )) && print "\n${#gone[@]} missing: ${gone[*]}" || print "\nnothing missing"
+}
+
 # codescribe — AD Studio Engine CLI
 codescribe() {
     (

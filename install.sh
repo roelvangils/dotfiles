@@ -20,7 +20,8 @@ headless=0
 # Configs for tools that need a GUI session. Skipped under --headless:
 # a symlink nothing ever reads is clutter, not configuration.
 gui_only=(borders bottom karabiner requestly sketchybar sketchybar-top
-          sunshine tock window-hud yabai zed notion fontforge)
+          sunshine tock window-hud yabai zed notion fontforge
+          neofetch osxphotos)
 
 link() {
     local src="$1" dst="$2"

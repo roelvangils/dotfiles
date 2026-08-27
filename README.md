@@ -56,6 +56,14 @@ and PATH) or `~/.zshrc.local` (everything interactive). Both are sourced
 last, so they can override anything the repo sets, and both are untracked:
 the repo describes what every machine shares and nothing else.
 
+## What a machine is missing
+
+Every dependency here is guarded, so a missing tool costs a feature rather
+than throwing an error. The cost of that is silence: an absent command
+looks exactly like one that was never configured. `doctor` says out loud
+what the guards skip — tools, coupled repositories, per-machine files, and
+window management on a machine that has a display.
+
 ## Coupled repositories
 
 `.skhdrc` calls Hammerspoon functions (`yabaiHudShow`, `yabaiHudFlip`, …)
