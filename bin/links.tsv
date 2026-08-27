@@ -1,0 +1,34 @@
+# bin/links.tsv — commands that live in another repository.
+#
+# ~/.local/bin is on PATH, so a symlink there makes a command global. The
+# command itself is not ours to store: it belongs to the repo in the second
+# column. This file records the mapping so a new machine can recreate every
+# link it has the repo for, and say which ones it skipped.
+#
+# Paths are relative to $HOME. install.sh links a row only when its target
+# exists, the same way .zshrc guards every tool it touches.
+#
+# name<TAB>target
+cl	repos/cl/cl.sh
+dir	repos/dir/dir.sh
+down	repos/down/down.js
+folio	repos/folio/index.js
+herald	repos/claude-hooks/hooks/herald
+hue-notify	repos/hue-notify/hue-notify.sh
+inspekt	repos/inspekt/.venv/bin/inspekt
+json	repos/powerthings/backlog/jsoneditor-wrapper.sh
+kat	repos/kat/kat.sh
+listen	repos/listener/.build/out/Products/Release/listener
+msmd	repos/msmd/msmd.py
+notch	repos/wp-notch/notch.sh
+office	scripts/office-lights
+path	repos/path/path.sh
+radio	repos/radio/target/release/radio
+speak	repos/tts/speak
+speak-engine	repos/tts/swift/.build/release/speak-engine
+str	repos/strike/strike.sh
+strike	repos/strike/strike.sh
+sym	repos/sym/sym.sh
+update	repos/update/update.sh
+ytt	repos/yt-captions/yt-transcribe.py
+zenit-dev	repos/zenit-workspace/zenit/tools/zenit-dev

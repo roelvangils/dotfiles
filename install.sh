@@ -52,6 +52,33 @@ for dir in "$REPO"/config/*(/); do
     link "$dir" "$HOME/.config/${dir:t}"
 done
 
+# ~/.local/bin is on PATH, so a file there is a global command. Two kinds
+# land in it, and they are not the same kind of thing.
+
+mkdir -p "$HOME/.local/bin"
+
+# Ours: scripts with no repo of their own. The repo is their home, and
+# without it they exist on exactly one machine.
+# links.tsv is the manifest below, not a command.
+for f in "$REPO"/bin/*(.); do
+    [[ "${f:t}" == links.tsv ]] && continue
+    link "$f" "$HOME/.local/bin/${f:t}"
+done
+
+# Everyone else's: a command that lives in another repository. We store the
+# pointer, never the code. A row whose target is absent is reported and
+# skipped — the repo is simply not cloned on this machine yet.
+absent=0
+while IFS=$'\t' read -r name target; do
+    [[ -z "$name" || "$name" == \#* ]] && continue
+    if [[ -e "$HOME/$target" ]]; then
+        link "$HOME/$target" "$HOME/.local/bin/$name"
+    else
+        (( absent++ ))
+    fi
+done < "$REPO/bin/links.tsv"
+(( absent )) && echo "bin: $absent command(s) skipped, their repo is not here — run doctor"
+
 # Secrets: real values never live in the repo
 if [[ ! -e "$HOME/.secrets" ]]; then
     cp "$REPO/.secrets.template" "$HOME/.secrets"

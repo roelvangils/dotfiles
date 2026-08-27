@@ -23,6 +23,8 @@ is sourced by `.zshrc` and excluded by `.gitignore`.
 | `Brewfile` | Everything Homebrew installs on this machine |
 | `config/` | Per-tool directories, each symlinked to `~/.config/<name>` |
 | `macos/` | System keyboard shortcuts, exported and restorable |
+| `bin/` | Scripts with no repo of their own, linked into `~/.local/bin` |
+| `bin/links.tsv` | Commands that live in another repo: the pointer, never the code |
 | `install.sh` | Symlinks all of the above into place |
 
 ## Setup on a new machine
@@ -55,6 +57,20 @@ PATH entry for a locally built binary — goes in `~/.zshenv.local` (variables
 and PATH) or `~/.zshrc.local` (everything interactive). Both are sourced
 last, so they can override anything the repo sets, and both are untracked:
 the repo describes what every machine shares and nothing else.
+
+## Global commands
+
+`~/.local/bin` is on PATH, so a file there is a global command. It holds
+two kinds of thing and they are not the same. A handful of scripts have no
+repo of their own — those live in `bin/` here, because otherwise they
+exist on exactly one machine. The rest are commands belonging to other
+repositories; `bin/links.tsv` records the pointer and `install.sh`
+recreates it on any machine that has the repo, skipping the rest.
+
+The directory itself is never symlinked. It is where things get installed
+to — the user-level `/usr/local/bin` — not a place where anything is
+authored, and it also holds build output and binaries that no dotfiles
+repo should carry.
 
 ## What a machine is missing
 

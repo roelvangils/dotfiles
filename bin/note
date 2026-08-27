@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# note — Append a timestamped entry to today's Obsidian daily note
+
+if [ -z "$1" ]; then
+  echo "Usage: note \"Your message here\""
+  exit 1
+fi
+
+DATE_PART=$(date "+%Y-%m-%d (%A)")
+TIME_PART=$(date "+%H:%M")
+ENTRY=$'\n'"- ${TIME_PART}: $1"
+
+# URL-encode via python3 (handles all special chars safely)
+urlencode() {
+  python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$1"
+}
+
+FILEPATH_ENC=$(urlencode "Daily Notes/${DATE_PART}.md")
+DATA_ENC=$(urlencode "$ENTRY")
+
+open -g "obsidian://adv-uri?vault=The%20Vault&filepath=${FILEPATH_ENC}&data=${DATA_ENC}&mode=append"

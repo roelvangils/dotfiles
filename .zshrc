@@ -429,6 +429,26 @@ doctor() {
         gone+=("codescribe-venv")
     fi
 
+    print "\ncommands in ~/.local/bin"
+    # Each row of bin/links.tsv points at another repo. A row we cannot link
+    # is a command this machine does not have — the clone is missing, or a
+    # build step has not run yet.
+    local n_ok=0 target
+    local -a no_repo stale
+    while IFS=$'\t' read -r name target; do
+        [[ -z "$name" || "$name" == \#* ]] && continue
+        if [[ -e "$HOME/.local/bin/$name" ]]; then
+            (( n_ok++ ))
+        elif [[ -L "$HOME/.local/bin/$name" ]]; then
+            stale+=("$name")           # link is there, what it points at is not
+        else
+            no_repo+=("$name")
+        fi
+    done < "$HOME/repos/dotfiles/bin/links.tsv"
+    print "  ok    $n_ok linked"
+    (( ${#no_repo[@]} )) && { print "  MISS  ${#no_repo[@]} not linked: ${no_repo[*]}"; gone+=("${no_repo[@]}") }
+    (( ${#stale[@]} ))   && print "  STALE ${#stale[@]} link(s) point nowhere: ${stale[*]}"
+
     print "\nper-machine files"
     # Untracked by design: the repo holds what every machine shares.
     for name in .secrets .zshenv.local .zshrc.local; do

@@ -1,0 +1,3 @@
+#!/bin/sh
+exec /Users/roelvangils/repos/slack-extract/.venv/bin/python \
+     /Users/roelvangils/repos/slack-extract/yap.py "$@"
