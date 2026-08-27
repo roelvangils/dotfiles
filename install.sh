@@ -3,12 +3,24 @@
 # non-destructive: an existing file or directory that is not already the
 # right symlink is reported and left alone, never overwritten.
 #
-#   ./install.sh          link everything, report what was skipped
+#   ./install.sh              link everything, report what was skipped
+#   ./install.sh --headless   shell, git and terminal tools only — for a
+#                             machine driven over SSH, where the window
+#                             manager, hotkey daemon and status bar have
+#                             no display to draw on
 #
 set -uo pipefail
 
 REPO="${0:A:h}"
 linked=0 skipped=0 present=0
+
+headless=0
+[[ "${1:-}" == "--headless" ]] && headless=1
+
+# Configs for tools that need a GUI session. Skipped under --headless:
+# a symlink nothing ever reads is clutter, not configuration.
+gui_only=(borders bottom karabiner requestly sketchybar sketchybar-top
+          sunshine tock window-hud yabai zed notion fontforge)
 
 link() {
     local src="$1" dst="$2"
@@ -23,14 +35,19 @@ link() {
 }
 
 # Home-directory dotfiles
-for f in .zshrc .zshenv .zsh_plugins.txt .gitconfig .gitconfig-personal \
-         .gitignore-global .skhdrc .yabairc; do
+files=(.zshrc .zshenv .zsh_plugins.txt .gitconfig .gitconfig-personal
+       .gitignore-global)
+(( headless )) || files+=(.skhdrc .yabairc)
+for f in $files; do
     link "$REPO/$f" "$HOME/$f"
 done
 
 # Everything under config/ becomes ~/.config/<name>
 mkdir -p "$HOME/.config"
 for dir in "$REPO"/config/*(/); do
+    if (( headless )) && (( ${gui_only[(Ie)${dir:t}]} )); then
+        continue
+    fi
     link "$dir" "$HOME/.config/${dir:t}"
 done
 
@@ -41,4 +58,9 @@ if [[ ! -e "$HOME/.secrets" ]]; then
 fi
 
 echo "done: $linked linked, $present already in place, $skipped skipped"
-echo "next: brew bundle --file=$REPO/Brewfile"
+if (( headless )); then
+    echo "headless: window manager, hotkeys and status bar left unlinked"
+    echo "next: machine-specific lines go in ~/.zshrc.local and ~/.zshenv.local"
+else
+    echo "next: brew bundle --file=$REPO/Brewfile"
+fi

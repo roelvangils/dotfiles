@@ -4,7 +4,9 @@
     {
       "id": "a9e29e5e-591a-4fd0-abf9-e2a4f5641313",
       "name": "TestAPI",
-      "path": "/Users/roelvangils/Documents/TestAPI"
+      "path": "/Users/roelvangils/Documents/TestAPI/__rq_backup",
+      "migrated": true
     }
-  ]
+  ],
+  "__migrated_to_arc": true
 }

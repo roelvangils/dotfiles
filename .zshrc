@@ -183,10 +183,15 @@ path=(
     $path
 )
 
-if [ -d "/opt/homebrew/opt/openjdk@21" ]; then
-    export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
-    export PATH="$JAVA_HOME/bin:$PATH"
-fi
+# The Zenit stack compiles with JDK 25; fall back to 21 if it is absent.
+for _jdk in openjdk@25 openjdk@21; do
+    if [ -d "/opt/homebrew/opt/$_jdk" ]; then
+        export JAVA_HOME="/opt/homebrew/opt/$_jdk"
+        export PATH="$JAVA_HOME/bin:$PATH"
+        break
+    fi
+done
+unset _jdk
 
 # ============================================================
 #  TOOLS
@@ -222,12 +227,17 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # --- Files & directories ---
-# Open a path in ForkLift. Going straight there skips the Finder window that
-# ~/.hammerspoon/forklift.lua would otherwise have to close again.
+# Open a path in ForkLift.
 fl() {
     open -a ForkLift "${1:-.}"
 }
-alias f='fl'
+
+# Open a path in Finder. ~/.hammerspoon/forklift.lua normally hijacks every
+# Finder window, so pause it briefly to let this one through.
+f() {
+    hs -c '_G.modules.forklift:suspend(4)' >/dev/null 2>&1
+    open -a Finder "${1:-.}"
+}
 alias tree="tree -a -I 'node_modules'"
 alias del='trash'                           # move to trash instead of deleting
 
@@ -500,6 +510,13 @@ export BG1=0xff363944
 export BG2=0xff414550
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/roelvangils/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+# ============================================================
+#  PER-MACHINE OVERRIDES
+# ============================================================
+# Interactive-shell counterpart to .zshenv.local. Sourced last, so it can
+# override anything above it. Untracked; see the README.
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

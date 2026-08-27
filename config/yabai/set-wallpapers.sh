@@ -9,7 +9,7 @@
 #
 # ── EDIT HERE ─────────────────────────────────────────────────────────────
 # Which set gets applied when no --set is given (this is what ~/.yabairc uses).
-ACTIVE_SET="september"
+ACTIVE_SET="severance"
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 

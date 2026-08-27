@@ -1,0 +1,19 @@
+{
+  "currency": "EUR",
+  "history": [
+    {
+      "at": "2026-08-24T17:18:56+00:00",
+      "kind": "set",
+      "amount": 48.11,
+      "note": "top-up €50 op 24 aug (AI Studio, na −€1,89)"
+    },
+    {
+      "at": "2026-08-24T18:51:52+00:00",
+      "kind": "debit",
+      "amount": -4.0404,
+      "note": "run test_expert-v1"
+    }
+  ],
+  "balance": 44.0696,
+  "updated": "2026-08-24T18:51:52+00:00"
+}

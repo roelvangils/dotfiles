@@ -66,3 +66,6 @@
 	last = log -1 --stat
 	undo = reset --soft HEAD~1
 	amend = commit --amend --no-edit
+[url "https://github.com/"]
+	insteadOf = ssh://git@github.com/
+	insteadOf = git@github.com:

@@ -33,6 +33,13 @@ git clone https://github.com/roelvangils/dotfiles.git ~/repos/dotfiles
 brew bundle --file=~/repos/dotfiles/Brewfile
 ```
 
+On a machine driven over SSH there is no display for yabai, skhd or
+sketchybar to draw on, so link the shell half only:
+
+```sh
+~/repos/dotfiles/install.sh --headless
+```
+
 Then fill in `~/.secrets` (created from the template by the installer).
 Open a new shell: antidote fetches the plugins on first run, which takes
 a second or two; every start after that is under 100 ms.
@@ -40,6 +47,14 @@ a second or two; every start after that is under 100 ms.
 Not covered by `brew bundle`: **yabai** is installed manually and blessed
 via a hash-pinned sudoers rule — see `suyabai` and `yabai-rehash` in
 `.zshrc`.
+
+## Per-machine differences
+
+Anything true for one machine only — a keg-only JDK, a Rust toolchain, a
+PATH entry for a locally built binary — goes in `~/.zshenv.local` (variables
+and PATH) or `~/.zshrc.local` (everything interactive). Both are sourced
+last, so they can override anything the repo sets, and both are untracked:
+the repo describes what every machine shares and nothing else.
 
 ## Coupled repositories
 

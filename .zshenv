@@ -87,3 +87,11 @@ path=(
 )
 export PATH
 
+
+# ============================================================
+#  PER-MACHINE OVERRIDES
+# ============================================================
+# Anything true for one machine only — a keg-only JDK, a Rust toolchain,
+# a PATH entry for a locally built tool — lives here. Untracked by design:
+# the repo describes what every machine shares, this file the rest.
+[[ -r "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"
