@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # move-window-to-space.sh <target> [follow]
 #
-#   target : next | prev | first | last | <1-based index>
+#   target : next | prev | first | last | recent | <1-based index>
 #   follow : "follow" to switch to that space too, anything else to stay put
 #
 # Why a script rather than two chained yabai calls:
@@ -23,7 +23,7 @@ set -uo pipefail
 YABAI=/opt/homebrew/bin/yabai
 PY=/usr/bin/python3          # absolute: skhd runs under launchd with a minimal PATH
 
-TARGET="${1:?usage: move-window-to-space.sh <next|prev|first|last|N> [follow]}"
+TARGET="${1:?usage: move-window-to-space.sh <next|prev|first|last|recent|N> [follow]}"
 FOLLOW="${2:-}"
 
 HS=/opt/homebrew/bin/hs
@@ -63,6 +63,17 @@ case "$TARGET" in
     prev)  t=$(( (cur - 2 + count) % count + 1 )) ;;
     first) t=1 ;;
     last)  t=$count ;;
+    # The space you came from, so the window follows the same toggle as
+    # ctrl+tab / ctrl+à. yabai tracks this itself; it is empty right after a
+    # restart, when nothing has been "recent" yet.
+    recent)
+        t=$("$YABAI" -m query --spaces --space recent 2>/dev/null \
+            | "$PY" -c 'import json,sys; print(json.load(sys.stdin)["index"])' 2>/dev/null) || t=""
+        if [ -z "$t" ]; then
+            fail "No recent space to move to yet"
+            exit 0
+        fi
+        ;;
     ''|*[!0-9]*) beep; exit 0 ;;       # not a number and not a keyword
     *)     t=$TARGET ;;
 esac

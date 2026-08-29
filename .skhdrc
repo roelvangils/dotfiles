@@ -185,8 +185,9 @@ window < e : /opt/homebrew/bin/yabai -m window --toggle expose; /opt/homebrew/bi
 # The ARROW keys and SPACE are handled in Hammerspoon (mouse-drag.lua), not here.
 # Arrows move the window through the Accessibility API for a smooth glide with no
 # drop-shadow flicker (yabai's animated --move flickers the shadow); holding a key
-# slides it, Shift dashes. Space cycles the window through centre / reasonable /
-# almost-max / original sizes. The HS event tap swallows both while the HUD is up.
+# slides it, Shift dashes. Space cycles the window through three centred sizes --
+# small / medium / large, scaled to the display -- and then back to the size it
+# started at. The HS event tap swallows both while the HUD is up.
 
 #== scratchpad
 # ── scratchpad (exit after) ───────────────────────────────────────────────
@@ -410,10 +411,12 @@ ctrl - 0x1A   : ~/.config/yabai/focus-space.sh 7   # è (kVK_ANSI_7)
 ctrl - 0x1C   : ~/.config/yabai/focus-space.sh 8   # ! (kVK_ANSI_8)
 ctrl - 0x19   : ~/.config/yabai/focus-space.sh 9   # ç (kVK_ANSI_9)
 
-# à = end of the physical row -> LAST space, mirroring Cmd+9 in browsers
-# (which jumps to the last tab, not tab 9). Tracks your space count as it
-# changes, and can never fail, so it never beeps.
-ctrl - 0x1D   : /opt/homebrew/bin/yabai -m space --focus last   # à (kVK_ANSI_0)
+# à = an alternative to ctrl - tab: back to the space you came from. HANDLED IN
+# HAMMERSPOON (space-toggle.lua), not here, for two things skhd cannot do: it
+# fires again on every key repeat (holding the key ping-ponged between the two
+# spaces), and it has no key-UP event, so "hold to peek, snap back on release"
+# is impossible. Hammerspoon's tap owns 0x1D and 0x52 with a BARE ctrl only --
+# the ctrl+cmd / ctrl+alt window-movers below still belong to skhd.
 
 # ── the same, on the NUMPAD ───────────────────────────────────────────────
 # kVK_ANSI_Keypad0..9. Note 0x5A is skipped — that is F20, not a keypad key.
@@ -434,10 +437,11 @@ ctrl - 0x58   : ~/.config/yabai/focus-space.sh 6   # keypad 6
 ctrl - 0x59   : ~/.config/yabai/focus-space.sh 7   # keypad 7
 ctrl - 0x5B   : ~/.config/yabai/focus-space.sh 8   # keypad 8
 ctrl - 0x5C   : ~/.config/yabai/focus-space.sh 9   # keypad 9
-ctrl - 0x52   : /opt/homebrew/bin/yabai -m space --focus last       # keypad 0 -> last
+# keypad 0 -> toggle. Also Hammerspoon's, see the note on 0x1D above.
 
 # ── back to the previous space (toggle) ───────────────────────────────────
-ctrl - tab    : /opt/homebrew/bin/yabai -m space --focus recent
+# ctrl - tab is HANDLED IN HAMMERSPOON (space-toggle.lua) together with ctrl - à
+# and ctrl - keypad 0; see the note on 0x1D above for why.
 
 # ══════════════════════════════════════════════════════════════════════════
 #  TAKE THIS WINDOW WITH ME — ctrl + cmd
@@ -466,8 +470,8 @@ ctrl + cmd - 0x1A  : ~/.config/yabai/move-window-to-space.sh 7 follow   # è
 ctrl + cmd - 0x1C  : ~/.config/yabai/move-window-to-space.sh 8 follow   # !
 ctrl + cmd - 0x19  : ~/.config/yabai/move-window-to-space.sh 9 follow   # ç
 
-# à = last space, mirroring `ctrl - à`
-ctrl + cmd - 0x1D  : ~/.config/yabai/move-window-to-space.sh last follow
+# à = the space you came from, mirroring `ctrl - à`
+ctrl + cmd - 0x1D  : ~/.config/yabai/move-window-to-space.sh recent follow
 
 # ── the same, on the NUMPAD ───────────────────────────────────────────────
 ctrl + cmd - 0x53  : ~/.config/yabai/move-window-to-space.sh 1 follow
@@ -479,7 +483,7 @@ ctrl + cmd - 0x58  : ~/.config/yabai/move-window-to-space.sh 6 follow
 ctrl + cmd - 0x59  : ~/.config/yabai/move-window-to-space.sh 7 follow
 ctrl + cmd - 0x5B  : ~/.config/yabai/move-window-to-space.sh 8 follow
 ctrl + cmd - 0x5C  : ~/.config/yabai/move-window-to-space.sh 9 follow
-ctrl + cmd - 0x52  : ~/.config/yabai/move-window-to-space.sh last follow
+ctrl + cmd - 0x52  : ~/.config/yabai/move-window-to-space.sh recent follow
 
 # ══════════════════════════════════════════════════════════════════════════
 #  SEND THE WINDOW AWAY, STAY HERE — ctrl + alt
@@ -515,7 +519,7 @@ ctrl + alt - 0x16  : ~/.config/yabai/move-window-to-space.sh 6   # §
 ctrl + alt - 0x1A  : ~/.config/yabai/move-window-to-space.sh 7   # è
 ctrl + alt - 0x1C  : ~/.config/yabai/move-window-to-space.sh 8   # !
 ctrl + alt - 0x19  : ~/.config/yabai/move-window-to-space.sh 9   # ç
-ctrl + alt - 0x1D  : ~/.config/yabai/move-window-to-space.sh last
+ctrl + alt - 0x1D  : ~/.config/yabai/move-window-to-space.sh recent
 
 # ── the same, on the NUMPAD ───────────────────────────────────────────────
 ctrl + alt - 0x53  : ~/.config/yabai/move-window-to-space.sh 1
@@ -527,7 +531,7 @@ ctrl + alt - 0x58  : ~/.config/yabai/move-window-to-space.sh 6
 ctrl + alt - 0x59  : ~/.config/yabai/move-window-to-space.sh 7
 ctrl + alt - 0x5B  : ~/.config/yabai/move-window-to-space.sh 8
 ctrl + alt - 0x5C  : ~/.config/yabai/move-window-to-space.sh 9
-ctrl + alt - 0x52  : ~/.config/yabai/move-window-to-space.sh last
+ctrl + alt - 0x52  : ~/.config/yabai/move-window-to-space.sh recent
 
 # ══════════════════════════════════════════════════════════════════════════
 #  PRAATPAAL
