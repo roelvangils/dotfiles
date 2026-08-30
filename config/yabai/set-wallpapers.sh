@@ -9,7 +9,7 @@
 #
 # ── EDIT HERE ─────────────────────────────────────────────────────────────
 # Which set gets applied when no --set is given (this is what ~/.yabairc uses).
-ACTIVE_SET="severance"
+ACTIVE_SET="pawel"
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 
@@ -50,6 +50,17 @@ load_set() {
                 "mo-xf3o1tBz13o-unsplash.jpg"                  # 8  Music & Movies
                 "boliviainteligente-ZPTv34ObQQs-unsplash.jpg"  # 9  Monitoring & Dashboards
             )
+            ;;
+        pawel)
+            # Paweł Czerwiński abstract paint/marble textures from Unsplash.
+            # Nine files, 5400-6000px wide — all above the 5120x2880 panel, so
+            # nothing upscales. Eight are 3:2, so `fill` crops ~15% top/bottom;
+            # IdjaVYHu87Y is PORTRAIT (4000x6000) and loses ~60% of its height
+            # to the crop — acceptable for abstract texture, not for anything
+            # with composition. No 01-..09- prefixes: Unsplash IDs sort as-is.
+            SET_DIR="$WALLPAPER_DIR/pawel"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
             ;;
         fluted)
             # BasicAppleGuy "Fluted Gradients" (February 2026 edition):
@@ -573,7 +584,7 @@ load_set() {
     return 0
 }
 # Declared outside load_set so the error branch above can name the sets too.
-SETS_ALL_STATIC="photos fluted september 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark dune matrix martian severance formankind silo foundation westworld devs snowpiercer alteredcarbon mandalorian bebop gits akira sunshine annihilation oblivion her gattaca tales dark andor scavengers raisedbywolves threebody bsg stationeleven contact exmachina solaris stalker furyroad fallout expanse blackmirror sanjunipero hotelreverie walle raiders closeencounters hollywood"
+SETS_ALL_STATIC="photos pawel fluted september 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark dune matrix martian severance formankind silo foundation westworld devs snowpiercer alteredcarbon mandalorian bebop gits akira sunshine annihilation oblivion her gattaca tales dark andor scavengers raisedbywolves threebody bsg stationeleven contact exmachina solaris stalker furyroad fallout expanse blackmirror sanjunipero hotelreverie walle raiders closeencounters hollywood"
 # ──────────────────────────────────────────────────────────────────────────
 #
 # HOW THIS WORKS, AND WHY IT LOOKS CLUMSY
