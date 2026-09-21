@@ -9,7 +9,7 @@
 #
 # ── EDIT HERE ─────────────────────────────────────────────────────────────
 # Which set gets applied when no --set is given (this is what ~/.yabairc uses).
-ACTIVE_SET="pawel"
+ACTIVE_SET="severance"
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers 2026"
 
@@ -59,6 +59,17 @@ load_set() {
             # to the crop — acceptable for abstract texture, not for anything
             # with composition. No 01-..09- prefixes: Unsplash IDs sort as-is.
             SET_DIR="$WALLPAPER_DIR/pawel"
+            SET_MODE="fill"
+            SET_FILES=()   # glob
+            ;;
+        goldenhour)
+            # Unsplash golden-hour landscapes, hand-ordered with 01-..09-
+            # prefixes. All 3:2 except 08 (4:3); most 4400-8500px wide, only
+            # 03/06/08 fall a little under the 5120 panel (mild upscale).
+            # Ordered to alternate subject and brightness: the two beaches
+            # (03/06) and two cityscapes (02/04) are kept apart, 07 (dark
+            # forest) and 09 (dark water) are the low-light anchors.
+            SET_DIR="$WALLPAPER_DIR/Golden Hour"
             SET_MODE="fill"
             SET_FILES=()   # glob
             ;;
@@ -584,7 +595,7 @@ load_set() {
     return 0
 }
 # Declared outside load_set so the error branch above can name the sets too.
-SETS_ALL_STATIC="photos pawel fluted september 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark dune matrix martian severance formankind silo foundation westworld devs snowpiercer alteredcarbon mandalorian bebop gits akira sunshine annihilation oblivion her gattaca tales dark andor scavengers raisedbywolves threebody bsg stationeleven contact exmachina solaris stalker furyroad fallout expanse blackmirror sanjunipero hotelreverie walle raiders closeencounters hollywood"
+SETS_ALL_STATIC="photos pawel goldenhour fluted september 2001 interstellar tron bladerunner bladerunner2049 et alien moon bttf ares arrival wargames avatar jurassicpark dune matrix martian severance formankind silo foundation westworld devs snowpiercer alteredcarbon mandalorian bebop gits akira sunshine annihilation oblivion her gattaca tales dark andor scavengers raisedbywolves threebody bsg stationeleven contact exmachina solaris stalker furyroad fallout expanse blackmirror sanjunipero hotelreverie walle raiders closeencounters hollywood"
 # ──────────────────────────────────────────────────────────────────────────
 #
 # HOW THIS WORKS, AND WHY IT LOOKS CLUMSY

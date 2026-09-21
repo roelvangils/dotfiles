@@ -106,7 +106,9 @@ brew "croc"                 # send files between machines over a code phrase
 # ============================================================
 #  WINDOW MANAGEMENT
 # ============================================================
-# yabai is installed manually (not brew-managed); its binary hash is
+# yabai comes from the asmvik/formulae tap (upstream: koekeishiya renamed to
+# asmvik) but is not declared here, so brew never upgrades it behind our back;
+# its binary hash is
 # pinned in /etc/sudoers.d/yabai — see suyabai/yabai-rehash in .zshrc.
 brew "skhd"                 # hotkey daemon; formula lives in asmvik/formulae
 
@@ -294,7 +296,7 @@ brew "imgcat"               # inline images in the terminal, used by the i alias
 #   thefuck                         -> slow, removed from .zshrc
 #   zsh-autosuggestions, zsh-syntax-highlighting -> antidote provides these
 #     (brew copies are installed but never sourced; kept, not declared)
-#   yabai                           -> installed manually, see WINDOW MANAGEMENT
+#   yabai                           -> asmvik/formulae, not declared; see WINDOW MANAGEMENT
 
 # Folio: PDF page counts and text extraction
 brew "poppler"

@@ -21,6 +21,9 @@ fi
 # Antidote bundles all plugins into one file up front, so startup does no
 # git work. Plugin list: ~/.zsh_plugins.txt
 if [ -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]; then
+    # Keep plugin clones out of ~/Library/Caches: macOS may purge that
+    # directory under disk pressure, which breaks the generated bundle.
+    zstyle ':antidote:home' dir ~/.antidote-plugins
     source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
     zsh_plugins="${ZDOTDIR:-$HOME}/.zsh_plugins"
     # Rebuild the bundle only when the list changes.
@@ -558,10 +561,16 @@ yabai-rehash() {
         && echo "yabai sudoers updated: $sha"
 }
 
-# Keep that hash in sync automatically after brew upgrades
+# Keep that hash in sync automatically after brew upgrades, and hide the
+# "Calling X is deprecated! ... Please report this issue to the <tap> tap"
+# blocks that third-party taps spew on every command. Each block is the
+# Warning line plus 3 follow-up lines; only stderr is filtered.
 brew() {
-    command brew "$@"
-    local rc=$?
+    { command brew "$@" 2>&1 >&3 3>&- | awk '
+        /^Warning: Calling .* is deprecated!/ { skip = 3; next }
+        skip > 0 { skip--; next }
+        { print; fflush() }' >&2 3>&-; } 3>&1
+    local rc=$pipestatus[1]
     if [[ "$1" =~ ^(upgrade|install|reinstall)$ ]] \
         && command -v yabai >/dev/null \
         && ! sudo -n yabai --load-sa &>/dev/null; then
@@ -600,3 +609,6 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 # Interactive-shell counterpart to .zshenv.local. Sourced last, so it can
 # override anything above it. Untracked; see the README.
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# Reconnect to the persistent CodeScribe session on Napoleon.
+alias napoleon="ssh -t -o ClearAllForwardings=yes napoleon 'tmux attach -t codescribe'"

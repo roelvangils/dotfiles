@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ~/.yabairc — yabai v7.1.25 (AhsanFazal fork, macOS 27 Golden Gate beta)
+# ~/.yabairc — yabai v7.1.25 (upstream, asmvik/formulae tap; macOS 27 Golden Gate beta)
 # Reload with: yabai --restart-service
 
 # ── scripting addition ────────────────────────────────────────────────────
@@ -107,7 +107,8 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" ma
 # `launch` opens every listed app that isn't running, without stealing focus.
 # Backgrounded: it sleeps between launches and nothing here waits on it. It
 # skips running apps, so a restart mid-session relaunches nothing.
-"$HOME/.config/yabai/place-apps.sh" rules
-"$HOME/.config/yabai/place-apps.sh" launch >/dev/null 2>&1 &
+# Temporarily disabled: automatic app launching and Space placement.
+# "$HOME/.config/yabai/place-apps.sh" rules
+# "$HOME/.config/yabai/place-apps.sh" launch >/dev/null 2>&1 &
 
 echo "yabai configuration loaded.."
