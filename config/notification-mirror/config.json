@@ -1,0 +1,17 @@
+{
+  "blocklist" : [
+    "birthday",
+    "jarig"
+  ],
+  "blockedApps" : [
+    "Little Snitch"
+  ],
+  "quietApps" : [
+    "Infuse"
+  ],
+  "idleSeconds" : 5,
+  "holdWhileMicrophoneInUse" : true,
+  "microphoneIgnore" : [
+    "BlackHole"
+  ]
+}

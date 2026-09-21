@@ -1,0 +1,85 @@
+# speak — configuration
+# Every setting can be overridden for one run with SPEAK_<NAME>, e.g.
+#   SPEAK_ROOM=cathedral speak "hello"
+# Edit and run speak: a daemon older than this file is replaced automatically.
+
+# --- Voice -------------------------------------------------------------
+# model         = eleven_v3
+# language      = nl
+# max_words     = 500                    # longer input is replaced by "too long"
+
+# Names or voice IDs both work; names are looked up once and remembered.
+voice = Paulien
+# voice_pick = sticky   # sticky (random once, then remembered), random, or text
+
+# audio_format: pcm (cleaner, larger cache) or mp3
+audio_format = pcm
+
+# --- Studio chain ------------------------------------------------------
+voice_eq = on
+voice_compression = on
+bleed = on
+# bleed_gain = 0.06
+# bleed_delay = 0.012
+
+# --- Room --------------------------------------------------------------
+# room: dry, booth, room, studio, plate, medium, hall, large, cathedral
+room = booth
+# reverb = 0.12                          # 0…1, overrides the preset's wetness
+
+# --- Spatial audio -----------------------------------------------------
+# spatial: on, off, or auto (auto = only on headphones)
+spatial = auto
+# head_tracking = on                     # needs motion permission via Speak.app
+# invert_head_tracking = off             # flip if the scene turns the wrong way
+# angle = 40                             # degrees left/right of centre
+# distance = 1.5                         # metres from the listener
+
+# --- Timing ------------------------------------------------------------
+# fade_duration = 2.0                    # seconds to fade out the previous line
+# entry_glide   = 1.2                    # seconds for a new voice to reach centre
+# tail          = 1.0                    # seconds of silence kept so reverb can decay
+# idle_timeout  = 900                    # daemon quits after this many seconds
+# cache_max_age = 86400                  # cached audio expires after this
+
+# --- Ducking other players ---------------------------------------------
+# both = Spotify and Music turn themselves down properly, and the system volume
+# catches everything else: a browser tab, a call, a game. The system route needs
+# an output device with a software volume — over HDMI there is none, and then it
+# quietly does nothing (no duck, and no compensating boost either).
+duck_method = both
+# duck_system_level = 0.4                # how far the system volume drops
+# duck_pause_apps   =                    # paused instead: VLC, IINA, Podcasts, TV
+
+# --- Misc --------------------------------------------------------------
+# Room tone bed: seamless 58 s loop, normalised to -26 LUFS so it sits well
+# under speech. Stereo, so it plays head-locked (centred, never spatialised).
+music = ~/.config/speak/bed.mp3
+music_volume = 0.028
+# music_spatial = off                    # on needs a mono file
+# debug = off
+
+# --- Humanizing --------------------------------------------------------
+# Rewrites text into how someone actually talks. Local rules, no AI.
+# Every device takes `default`, `off`, or a level from 1 to 10.
+humanize = off
+# fillers          = default   # euh, uhm, nou, tja, ik bedoel
+# openings         = default   # Kijk, Nou, Goed at the start of a paragraph
+# self_corrections = default   # wer–werkwijze
+# restarts         = default   # "we de, we de begroting"
+# breathing        = default   # [breathes] / [pause] in long sentences
+# reductions       = off       # da's, 't is — wrong in formal text
+
+# --- Per speaker -------------------------------------------------------
+# Position in the room, and how human each voice sounds. Names match the
+# [Name] tags used in the text.
+
+[Margot]
+humanize = on
+fillers = 6
+restarts = 4
+
+[Theo]
+humanize = on
+fillers = 3
+self_corrections = 2

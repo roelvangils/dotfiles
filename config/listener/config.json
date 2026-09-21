@@ -1,0 +1,11 @@
+{
+  "threshold" : 0.7,
+  "rearmSilenceSeconds" : 0.5,
+  "capture" : {
+    "enabled" : true,
+    "prerollSeconds" : 1.0
+  },
+  "actions" : {
+    "shortcutEnd" : "return"
+  }
+}

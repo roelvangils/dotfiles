@@ -61,3 +61,16 @@ config/fabric/.env
 
 # Contains a full map of the local network, including MAC-derived IPv6
 config/wireshark/
+
+# Backups and editor state next to a config, never the config itself
+*.bak
+*.bak-*
+*.before-*
+config/micro/buffers/
+config/speak/*.mp3
+
+# gh stores its OAuth token here; config.yml (the settings) is fine
+config/gh/hosts.yml
+
+# Lock files are runtime state
+*.lock

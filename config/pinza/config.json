@@ -1,0 +1,139 @@
+{
+  "accessibility" : {
+    "highContrast" : "followSystem",
+    "reduceMotion" : "disabled"
+  },
+  "actions" : {
+    "copyFormats" : [
+      {
+        "enabled" : true,
+        "id" : "git-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "absolute-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "tilde-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "tilde-path-escaped"
+      },
+      {
+        "enabled" : true,
+        "id" : "filename"
+      },
+      {
+        "enabled" : true,
+        "id" : "enclosing-folder"
+      },
+      {
+        "enabled" : true,
+        "id" : "applescript-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "file-url"
+      },
+      {
+        "enabled" : true,
+        "id" : "vscode-url"
+      },
+      {
+        "enabled" : true,
+        "id" : "scp-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "markdown-link"
+      },
+      {
+        "enabled" : true,
+        "id" : "html-link"
+      },
+      {
+        "enabled" : true,
+        "id" : "rot13-path"
+      },
+      {
+        "enabled" : true,
+        "id" : "sha256"
+      },
+      {
+        "enabled" : true,
+        "id" : "base64-data-uri"
+      },
+      {
+        "enabled" : true,
+        "id" : "base64"
+      }
+    ]
+  },
+  "bin" : {
+    "enabled" : true,
+    "requireTouchID" : true,
+    "retentionDays" : 30
+  },
+  "general" : {
+    "appearance" : "auto",
+    "checkForUpdatesAutomatically" : true,
+    "launchAtLogin" : true,
+    "menuBarIconStyle" : "paperclip",
+    "windowStyle" : "launcher"
+  },
+  "hud" : {
+    "dismissIndicator" : "none",
+    "duration" : "fiveSeconds",
+    "position" : "topCenter",
+    "sound" : "funk"
+  },
+  "integrations" : {
+    "detachedCards" : {
+      "floatAboveApps" : true,
+      "restoreOnLaunch" : false
+    },
+    "fetchYouTubeAvatars" : true,
+    "preferredTerminal" : "com.apple.Terminal",
+    "raindrop" : {
+      "showInHUD" : true
+    },
+    "reminders" : {
+      "eveningTime" : "20:00",
+      "morningTime" : "09:00"
+    }
+  },
+  "mcp" : {
+    "enabled" : false,
+    "tools" : {
+      "copy" : false,
+      "get" : true,
+      "list" : true,
+      "reveal" : true,
+      "search" : true
+    }
+  },
+  "privacy" : {
+    "crashReporting" : false
+  },
+  "recents" : {
+    "autoRevealOnFocus" : false,
+    "discDecoration" : {
+      "speed" : "rpm33",
+      "style" : "cd"
+    },
+    "displayCount" : 10,
+    "fetchFavicons" : true,
+    "fetchRichPreviews" : true,
+    "hideSiteNameInTitles" : true,
+    "poofAndSoundOnDelete" : true,
+    "tooltipPlacement" : "auto",
+    "urlLivenessCheck" : false
+  },
+  "shortcuts" : {
+    "copyDocumentPath" : "ctrl+p",
+    "openRecents" : "ctrl+opt+p"
+  },
+  "version" : 1
+}
