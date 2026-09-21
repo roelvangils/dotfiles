@@ -25,6 +25,7 @@ is sourced by `.zshrc` and excluded by `.gitignore`.
 | `macos/` | System keyboard shortcuts, exported and restorable |
 | `bin/` | Scripts with no repo of their own, linked into `~/.local/bin` |
 | `bin/links.tsv` | Commands that live in another repo: the pointer, never the code |
+| `macos/launchd/` | launchd agent templates; `install.sh` renders and loads them |
 | `install.sh` | Symlinks all of the above into place |
 
 ## Setup on a new machine
@@ -113,3 +114,12 @@ file, bytecode-compiles it, and only rebuilds when that list changes.
 - [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search) — prefix search with the arrow keys
 - [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) — colours commands as you type
 - [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) — grey suggestion from history
+
+## Keeping it committed
+
+`bin/dotfiles-sync` commits and pushes whatever changed, daily at 17:30 via
+the `com.roelvangils.dotfiles-sync` launchd agent (installed by `install.sh`).
+It refuses to commit while a staged line looks like a credential, and only
+speaks up, with a notification, when something failed. `dotfiles-sync --dry-run`
+shows what the next run would commit. Log: `~/Library/Logs/dotfiles-sync.log`.
+

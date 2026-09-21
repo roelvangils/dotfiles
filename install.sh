@@ -79,6 +79,26 @@ while IFS=$'\t' read -r name target; do
 done < "$REPO/bin/links.tsv"
 (( absent )) && echo "bin: $absent command(s) skipped, their repo is not here — run doctor"
 
+# Login-shell profile and small rc files that have no directory of their own
+for f in .zprofile .shamonrc; do
+    link "$REPO/$f" "$HOME/$f"
+done
+
+# launchd agents: templates with __HOME__, rendered into ~/Library/LaunchAgents
+# (launchd expands no variables, and the repo stores no home path). A changed
+# template is re-rendered and reloaded; an unchanged one is left alone.
+(( headless )) || for t in "$REPO"/macos/launchd/*.plist(N); do
+    dst="$HOME/Library/LaunchAgents/${t:t}"
+    rendered=$(sed "s|__HOME__|$HOME|g" "$t")
+    if [[ -e "$dst" ]] && [[ "$(<"$dst")" == "$rendered" ]]; then
+        (( present++ ))
+    else
+        print -r -- "$rendered" > "$dst" && echo "agent: $dst"
+        launchctl unload "$dst" 2>/dev/null
+        launchctl load "$dst" && (( linked++ ))
+    fi
+done
+
 # Secrets: real values never live in the repo
 if [[ ! -e "$HOME/.secrets" ]]; then
     cp "$REPO/.secrets.template" "$HOME/.secrets"

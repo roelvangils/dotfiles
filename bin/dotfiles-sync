@@ -1,0 +1,66 @@
+#!/bin/zsh
+# dotfiles-sync — commit and push whatever changed in the dotfiles repo.
+#
+# Runs from launchd once a day (macos/launchd/com.roelvangils.dotfiles-sync)
+# and can be run by hand. Quiet when there is nothing to do; a macOS
+# notification only when something went wrong.
+#
+# The repo is public, so nothing is committed while a staged line looks like
+# a credential. That check is a coarse regex, not a guarantee: the real guard
+# is .gitignore, which keeps token files out of the repo altogether.
+#
+#   dotfiles-sync            commit + push
+#   dotfiles-sync --dry-run  show what would be committed, change nothing
+
+set -u
+REPO="${DOTFILES_REPO:-$HOME/repos/dotfiles}"
+LOG="$HOME/Library/Logs/dotfiles-sync.log"
+dry=0; [[ "${1:-}" == "--dry-run" ]] && dry=1
+
+log() { print -r -- "$(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG"; (( dry )) && print -r -- "$*"; }
+fail() {
+    log "ERROR: $*"
+    osascript -e "display notification \"$*\" with title \"dotfiles-sync\"" >/dev/null 2>&1
+    exit 1
+}
+
+cd "$REPO" || fail "repo not found: $REPO"
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "not a git repo: $REPO"
+
+git add -A
+
+if ! git diff --cached --quiet; then
+    # Anything that smells like a key or token: unstage everything and stop.
+    # Field names ("api_key:") in comments are fine; a long opaque value after
+    # one is not.
+    pattern='(sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|gh[pousr]_[A-Za-z0-9]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY|(api[_-]?key|secret|token|password)["'"'"' ]*[:=]["'"'"' ]*[A-Za-z0-9_/+=-]{20,})'
+    if hit=$(git diff --cached -U0 | grep '^+' | grep -v '^+++' | grep -E -i -m1 "$pattern"); then
+        git reset -q
+        fail "possible secret staged, nothing committed: ${hit:0:60}"
+    fi
+    files=$(git diff --cached --name-only | sed 's|^config/||' | head -6 | paste -sd ' ' -)
+    count=$(git diff --cached --name-only | wc -l | tr -d ' ')
+    (( count > 6 )) && files="$files …"
+    msg="Auto-sync $(date '+%Y-%m-%d'): $files"
+    if (( dry )); then
+        log "would commit: $msg"
+        git diff --cached --stat
+        git reset -q
+        exit 0
+    fi
+    git commit -q -m "$msg" || fail "commit failed"
+    log "committed: $msg"
+fi
+
+(( dry )) && { log "nothing to commit"; exit 0; }
+
+# Push whatever is ahead, after taking remote changes (another machine) on top.
+if ! git fetch -q origin 2>>"$LOG"; then
+    log "offline, push postponed"
+    exit 0
+fi
+if [[ -n "$(git log --oneline @{u}..HEAD 2>/dev/null)" ]]; then
+    git pull -q --rebase --autostash 2>>"$LOG" || fail "rebase on origin failed, resolve by hand"
+    git push -q 2>>"$LOG" || fail "push failed"
+    log "pushed"
+fi
