@@ -24,8 +24,44 @@
       "kind": "debit",
       "amount": -4.3447,
       "note": "run 2026-09-17_003814"
+    },
+    {
+      "at": "2026-09-24T20:13:52+00:00",
+      "kind": "debit",
+      "amount": -0.022,
+      "note": "run 2026-09-24_221042"
+    },
+    {
+      "at": "2026-09-24T20:14:47+00:00",
+      "kind": "debit",
+      "amount": -0.4262,
+      "note": "run diag-out"
+    },
+    {
+      "at": "2026-09-24T20:16:47+00:00",
+      "kind": "debit",
+      "amount": -0.1844,
+      "note": "run diag-noframes"
+    },
+    {
+      "at": "2026-09-24T20:16:50+00:00",
+      "kind": "debit",
+      "amount": -0.0845,
+      "note": "run diag-novideo"
+    },
+    {
+      "at": "2026-09-24T20:20:31+00:00",
+      "kind": "debit",
+      "amount": -0.2131,
+      "note": "run live-check"
+    },
+    {
+      "at": "2026-09-24T20:37:53+00:00",
+      "kind": "debit",
+      "amount": -0.363,
+      "note": "run 2026-09-24_223156"
     }
   ],
-  "balance": 39.6841,
-  "updated": "2026-09-16T23:32:27+00:00"
+  "balance": 38.3909,
+  "updated": "2026-09-24T20:37:53+00:00"
 }
