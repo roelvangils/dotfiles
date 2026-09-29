@@ -1,5 +1,5 @@
 {
-  "currency": "EUR",
+  "currency": "USD",
   "history": [
     {
       "at": "2026-08-24T17:18:56+00:00",
@@ -66,8 +66,14 @@
       "kind": "debit",
       "amount": -0.8391,
       "note": "run 2026-09-27_163725"
+    },
+    {
+      "at": "2026-09-29T14:47:10+00:00",
+      "kind": "set",
+      "amount": 500.0,
+      "note": "top-up in AI Studio (2026-09-29): saldo $500"
     }
   ],
-  "balance": 37.5518,
-  "updated": "2026-09-27T15:02:56+00:00"
+  "balance": 500.0,
+  "updated": "2026-09-29T14:47:10+00:00"
 }

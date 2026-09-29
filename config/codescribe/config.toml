@@ -1,9 +1,6 @@
 # Machine defaults in project format v2. Original retained in config.toml.before-auto-mix-v2.
 "advanced"."verification"."preflight" = true
-"advanced"."generation"."pro_model" = "gemini-3.1-pro-preview"
 "advanced"."costs"."currency" = "EUR"
-"advanced"."costs"."gemini_input_per_1m" = 2.0
-"advanced"."costs"."gemini_output_per_1m" = 12.0
 "advanced"."costs"."tts_input_per_1m" = 1.0
 "advanced"."costs"."tts_output_per_1m" = 20.0
 "advanced"."costs"."elevenlabs_per_1k_chars" = 0.18
