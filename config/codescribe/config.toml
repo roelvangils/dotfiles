@@ -6,4 +6,4 @@
 "advanced"."costs"."elevenlabs_per_1k_chars" = 0.18
 "voice"."provider" = "elevenlabs"
 "voice"."voice" = "VmfDq5bH5rzYRsJtrQ7l"
-"voice"."model" = "eleven_v3"
+"voice"."model" = "eleven_v4"

@@ -1,17 +1,18 @@
 {
-  "blocklist" : [
+  "blocklist": [
     "birthday",
     "jarig"
   ],
-  "blockedApps" : [
+  "blockedApps": [
     "Little Snitch"
   ],
-  "quietApps" : [
+  "quietApps": [
     "Infuse"
   ],
-  "idleSeconds" : 5,
-  "holdWhileMicrophoneInUse" : true,
-  "microphoneIgnore" : [
+  "idleSeconds": 5,
+  "holdWhileZoomed": true,
+  "holdWhileMicrophoneInUse": true,
+  "microphoneIgnore": [
     "BlackHole"
   ]
 }
