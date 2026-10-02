@@ -428,7 +428,7 @@ doctor() {
     done
     # codescribe runs from its own virtualenv, so the clone alone is not enough.
     if [[ -d "$HOME/repos/tadoma-studio" && ! -x "$HOME/repos/tadoma-studio/engine/.venv/bin/python" ]]; then
-        print "  MISS  codescribe venv — (cd ~/repos/tadoma-studio/engine && uv venv --python 3.12 && uv pip install -r requirements-lock.txt -e .)"
+        print "  MISS  tadoma venv — (cd ~/repos/tadoma-studio/engine && uv venv --python 3.12 && uv pip install -r requirements-lock.txt -e .)"
         gone+=("codescribe-venv")
     fi
 
@@ -475,14 +475,15 @@ doctor() {
     (( ${#gone[@]} )) && print "\n${#gone[@]} missing: ${gone[*]}" || print "\nnothing missing"
 }
 
-# codescribe — AD Studio Engine CLI
-codescribe() {
+# tadoma — Tadoma Studio AD-engine CLI (heette tot 2026-10-02 `codescribe`; die naam blijft een alias)
+tadoma() {
     (
         [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
         PYTHONPATH="$HOME/repos/tadoma-studio/engine" \
-            "$HOME/repos/tadoma-studio/engine/.venv/bin/python" -m codescribe.cli "$@"
+            "$HOME/repos/tadoma-studio/engine/.venv/bin/python" -m tadoma.cli "$@"
     )
 }
+codescribe() { tadoma "$@"; }
 
 # Restore a file from the trash to where it came from
 undel() {
