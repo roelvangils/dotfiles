@@ -427,8 +427,8 @@ doctor() {
         fi
     done
     # codescribe runs from its own virtualenv, so the clone alone is not enough.
-    if [[ -d "$HOME/repos/codescribe" && ! -x "$HOME/repos/codescribe/engine/.venv/bin/python" ]]; then
-        print "  MISS  codescribe venv — (cd ~/repos/codescribe/engine && uv venv --python 3.12 && uv pip install -r requirements-lock.txt -e .)"
+    if [[ -d "$HOME/repos/tadoma-studio" && ! -x "$HOME/repos/tadoma-studio/engine/.venv/bin/python" ]]; then
+        print "  MISS  codescribe venv — (cd ~/repos/tadoma-studio/engine && uv venv --python 3.12 && uv pip install -r requirements-lock.txt -e .)"
         gone+=("codescribe-venv")
     fi
 
@@ -479,8 +479,8 @@ doctor() {
 codescribe() {
     (
         [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
-        PYTHONPATH="$HOME/repos/codescribe/engine" \
-            "$HOME/repos/codescribe/engine/.venv/bin/python" -m codescribe.cli "$@"
+        PYTHONPATH="$HOME/repos/tadoma-studio/engine" \
+            "$HOME/repos/tadoma-studio/engine/.venv/bin/python" -m codescribe.cli "$@"
     )
 }
 

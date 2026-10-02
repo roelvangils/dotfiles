@@ -91,7 +91,7 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Connect|Move|Info|Get Info)" ma
 # Gating on this matters: set-wallpapers.sh has to VISIT all nine spaces (there
 # is no API to dress a space you aren't on), so running it unconditionally would
 # make every yabai restart flick through your desktops for a few seconds.
-[ $? -eq 10 ] && "$HOME/.config/yabai/set-wallpapers.sh" 1
+# [ $? -eq 10 ] && "$HOME/.config/yabai/set-wallpapers.sh" 1
 
 # ── apps: a home space per app, opened at login ───────────────────────────
 # WHICH app goes WHERE lives in apps.conf (same folder) — edit that, then

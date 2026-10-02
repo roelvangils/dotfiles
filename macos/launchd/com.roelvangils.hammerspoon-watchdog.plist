@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: install.sh replaces __HOME__ and writes it to ~/Library/LaunchAgents.
+     Relaunches Hammerspoon when it crashed or hung; see ~/.hammerspoon/scripts/watchdog.sh. -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.roelvangils.hammerspoon-watchdog</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>__HOME__/.hammerspoon/scripts/watchdog.sh</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StartInterval</key>
+    <integer>60</integer>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/Library/Logs/hammerspoon-watchdog.err.log</string>
+</dict>
+</plist>
