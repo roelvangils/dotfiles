@@ -613,3 +613,6 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # Reconnect to the persistent CodeScribe session on Napoleon.
 alias napoleon="ssh -t -o ClearAllForwardings=yes napoleon 'tmux attach -t codescribe'"
+
+# bun completions
+[ -s "/Users/roelvangils/.bun/_bun" ] && source "/Users/roelvangils/.bun/_bun"
