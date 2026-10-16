@@ -1,0 +1,89 @@
+{
+  "$schema" : "file:///opt/homebrew/share/macrowhisper/macrowhisper-schema.json",
+  "configVersion" : 2,
+  "defaults" : {
+    "actionDelay" : 0.02,
+    "activeAction" : "",
+    "autoUpdateConfig" : true,
+    "bypassModes" : "",
+    "clipboardAttachments" : false,
+    "clipboardBuffer" : 5,
+    "clipboardIgnore" : "",
+    "clipboardStacking" : false,
+    "disableUpdateCheck" : false,
+    "history" : null,
+    "icon" : "",
+    "moveTo" : "",
+    "muteNotifications" : false,
+    "muteTriggers" : false,
+    "nextAction" : "",
+    "redactedLogs" : false,
+    "restoreClipboard" : true,
+    "restoreClipboardDelay" : 0.3,
+    "returnDelay" : 0.15,
+    "scheduledActionTimeout" : 5,
+    "scriptAsync" : true,
+    "scriptWaitTimeout" : 3,
+    "simEsc" : true,
+    "simKeypress" : false,
+    "simReturn" : false,
+    "smartCasing" : true,
+    "smartPunctuation" : true,
+    "smartSpacing" : true,
+    "watch" : "~/superwhisper"
+  },
+  "inserts" : {
+
+  },
+  "scriptsAS" : {
+
+  },
+  "scriptsShell" : {
+    "emailRichPaste" : {
+      "action" : "/Users/roelvangils/superwhisper/macrowhisper/sw-richpaste.sh <<'SW_RICHPASTE_EOF_X7Q4'\n{{raw:swResult}}\nSW_RICHPASTE_EOF_X7Q4",
+      "actionDelay" : null,
+      "clipboardAttachments" : null,
+      "clipboardStacking" : null,
+      "icon" : null,
+      "inputCondition" : null,
+      "moveTo" : null,
+      "nextAction" : null,
+      "restoreClipboard" : false,
+      "restoreClipboardDelay" : null,
+      "scriptAsync" : false,
+      "scriptWaitTimeout" : 30,
+      "simEsc" : false,
+      "triggerApps" : null,
+      "triggerLogic" : "or",
+      "triggerModes" : "^\\s*Reply\\s*$|^\\s*New email\\s*$",
+      "triggerUrls" : null,
+      "triggerVoice" : null
+    },
+    "slackRichPaste" : {
+      "action" : "/Users/roelvangils/.local/bin/sw-slackpaste <<'SW_SLACKPASTE_EOF_X7Q4'\n{{raw:swResult}}\nSW_SLACKPASTE_EOF_X7Q4",
+      "actionDelay" : null,
+      "clipboardAttachments" : null,
+      "clipboardStacking" : null,
+      "icon" : null,
+      "inputCondition" : null,
+      "moveTo" : null,
+      "nextAction" : null,
+      "restoreClipboard" : false,
+      "restoreClipboardDelay" : null,
+      "scriptAsync" : false,
+      "scriptWaitTimeout" : 15,
+      "simEsc" : false,
+      "triggerApps" : null,
+      "triggerLogic" : "or",
+      "triggerModes" : "^\\s*Slack\\s*$",
+      "triggerUrls" : null,
+      "triggerVoice" : null
+    }
+  },
+  "shortcuts" : {
+
+  },
+  "urls" : {
+
+  }
+}
