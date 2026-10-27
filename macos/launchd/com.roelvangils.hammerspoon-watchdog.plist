@@ -18,7 +18,7 @@
     <key>RunAtLoad</key>
     <true/>
     <key>StartInterval</key>
-    <integer>60</integer>
+    <integer>30</integer>
     <key>StandardErrorPath</key>
     <string>__HOME__/Library/Logs/hammerspoon-watchdog.err.log</string>
 </dict>
